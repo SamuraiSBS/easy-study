@@ -67,29 +67,59 @@ window.__EASY_STUDY_CONFIG__ = {
 
 ## Локальный запуск
 
-Backend:
+Быстрый запуск для просмотра в браузере без Docker и PostgreSQL. Команды ниже рассчитаны на PowerShell и запускаются из корня проекта.
 
-```bash
+Первый раз установите зависимости:
+
+```powershell
 cd backend
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-copy .env.example .env
-docker compose up -d db
-alembic upgrade head
-python -m app.seed_data
-uvicorn app.main:app --reload
+
+cd ..\frontend
+npm install
 ```
 
-Frontend:
+Backend, терминал 1:
 
-```bash
+```powershell
+cd backend
+.venv\Scripts\activate
+
+$db = Join-Path $env:TEMP 'easy_study_runtime.sqlite3'
+$env:DATABASE_URL = 'sqlite+aiosqlite:///' + $db.Replace('\', '/')
+$env:AUTO_CREATE_DB = 'true'
+$env:DEV_TELEGRAM_USER_ID = '123456789'
+$env:TELEGRAM_BOT_TOKEN = 'local-disabled'
+$env:FRONTEND_ORIGIN = 'http://localhost:5173'
+$env:FRONTEND_ORIGINS = 'http://localhost:5173'
+
+python -c "import asyncio; import app.models; from app.database import create_db; asyncio.run(create_db())"
+python -m app.seed_data
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+`TELEGRAM_BOT_TOKEN=local-disabled` нужен, чтобы локальный запуск не использовал реальный токен из `.env`. Ошибку Telegram Bot API при старте можно игнорировать: на работу Mini App в браузере она не влияет.
+
+Frontend, терминал 2:
+
+```powershell
 cd frontend
-npm install
 npm run dev
 ```
 
 Mini App будет доступен на `http://localhost:5173`.
+
+Для локального API файл `frontend/public/runtime-config.js` должен указывать на:
+
+```js
+window.__EASY_STUDY_CONFIG__ = {
+  API_URL: 'http://localhost:8000/api'
+};
+```
+
+Для production верните в этом файле production URL.
 
 ## Telegram bot
 
@@ -164,4 +194,3 @@ docker compose -f docker-compose.prod.yml --env-file .env.production up -d --bui
 ```
 
 Frontend можно деплоить как обычный Vite static build. Для Vercel добавлен `frontend/vercel.json` с SPA rewrite.
-
