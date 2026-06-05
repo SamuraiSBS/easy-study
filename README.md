@@ -69,6 +69,91 @@ window.__EASY_STUDY_CONFIG__ = {
 
 Быстрый запуск для просмотра в браузере без Docker и PostgreSQL. Команды ниже рассчитаны на PowerShell и запускаются из корня проекта.
 
+## Быстрый запуск для Codex
+
+Если нужно просто запустить проект локально, не сканируйте весь репозиторий. Достаточно проверить этот раздел README и выполнить команды ниже.
+
+1. Если `backend/.venv` отсутствует, создать окружение и поставить зависимости:
+
+```powershell
+cd backend
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt
+cd ..
+```
+
+2. Если `frontend/node_modules` отсутствует, поставить frontend-зависимости:
+
+```powershell
+cd frontend
+npm install
+cd ..
+```
+
+3. Убедиться, что `frontend/public/runtime-config.js` указывает на локальный API:
+
+```js
+window.__EASY_STUDY_CONFIG__ = {
+  API_URL: 'http://localhost:8000/api'
+};
+```
+
+4. Подготовить локальную SQLite-базу:
+
+```powershell
+cd backend
+$db = Join-Path $env:TEMP 'easy_study_runtime.sqlite3'
+$env:DATABASE_URL = 'sqlite+aiosqlite:///' + $db.Replace('\', '/')
+$env:AUTO_CREATE_DB = 'true'
+$env:DEV_TELEGRAM_USER_ID = '123456789'
+$env:TELEGRAM_BOT_TOKEN = 'local-disabled'
+$env:FRONTEND_ORIGIN = 'http://localhost:5173'
+$env:FRONTEND_ORIGINS = 'http://localhost:5173'
+
+.venv\Scripts\python.exe -c "import asyncio; import app.models; from app.database import create_db; asyncio.run(create_db())"
+.venv\Scripts\python.exe -m app.seed_data
+cd ..
+```
+
+5. Запустить backend и frontend:
+
+```powershell
+cd backend
+$db = Join-Path $env:TEMP 'easy_study_runtime.sqlite3'
+$env:DATABASE_URL = 'sqlite+aiosqlite:///' + $db.Replace('\', '/')
+$env:AUTO_CREATE_DB = 'true'
+$env:DEV_TELEGRAM_USER_ID = '123456789'
+$env:TELEGRAM_BOT_TOKEN = 'local-disabled'
+$env:FRONTEND_ORIGIN = 'http://localhost:5173'
+$env:FRONTEND_ORIGINS = 'http://localhost:5173'
+.venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+Во втором терминале:
+
+```powershell
+cd frontend
+npm run dev
+```
+
+Проверка:
+
+```powershell
+curl.exe -s -i http://localhost:8000/api/services
+curl.exe -s -i http://localhost:5173
+```
+
+Ожидаемые адреса: frontend `http://localhost:5173`, backend `http://localhost:8000/api`.
+
+Примечания для агента:
+
+- Не запускать Docker/PostgreSQL для обычного локального просмотра.
+- Не читать все файлы проекта, если задача только "запусти проект локально".
+- Не запускать тесты и сборку без отдельной просьбы.
+- Ошибку Telegram Bot API при `TELEGRAM_BOT_TOKEN=local-disabled` можно игнорировать.
+- Если Vite падает с `spawn EPERM`, перезапустить `npm run dev` вне sandbox.
+- Если `python -m venv .venv` падает на `ensurepip` из-за доступа к `C:\Temp`, повторить команду вне sandbox.
+
 Первый раз установите зависимости:
 
 ```powershell

@@ -8,6 +8,7 @@ import { HomePage } from './pages/HomePage';
 import { OrderDetailPage } from './pages/OrderDetailPage';
 import { OrderFormPage } from './pages/OrderFormPage';
 import { OrdersPage } from './pages/OrdersPage';
+import { ProfilePage } from './pages/ProfilePage';
 import { ReviewPage } from './pages/ReviewPage';
 import { ServicePage } from './pages/ServicePage';
 import { api } from './services/api';
@@ -60,6 +61,7 @@ export function App() {
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/orders/:orderId" element={<OrderDetailPage />} />
         <Route path="/orders/:orderId/review" element={<ReviewPage />} />
+        <Route path="/profile" element={<ProfilePage user={user} />} />
         <Route path="/admin" element={user?.is_admin ? <AdminPage /> : <Navigate to="/" replace />} />
         <Route path="/admin/orders/:orderId" element={user?.is_admin ? <AdminPage /> : <Navigate to="/" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
@@ -67,4 +69,3 @@ export function App() {
     </Layout>
   );
 }
-

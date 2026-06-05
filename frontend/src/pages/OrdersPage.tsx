@@ -19,8 +19,8 @@ export function OrdersPage() {
   const orders = data || [];
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Мои заказы</h1>
-      {orders.length === 0 ? <EmptyState title="У вас пока нет заказов" /> : null}
+      <h1 className="text-2xl font-semibold">Мои заявки</h1>
+      {orders.length === 0 ? <EmptyState title="У вас пока нет заявок" /> : null}
       <div className="space-y-3">
         {orders.map((order) => (
           <Link
@@ -56,4 +56,3 @@ export function OrdersPage() {
     </div>
   );
 }
-
