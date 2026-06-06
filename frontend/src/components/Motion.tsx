@@ -71,7 +71,7 @@ export function PageTransition({ children, direction = 1 }: PageTransitionProps)
   return (
     <motion.div
       initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: direction * 24, y: 10, scale: 0.985 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
+      animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
       exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: direction * -18, y: -6, scale: 0.99 }}
       transition={prefersReducedMotion ? { duration: 0.12 } : smoothTransition}
     >
