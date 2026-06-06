@@ -5,7 +5,7 @@ export default {
     extend: {
       colors: {
         app: {
-          bg: 'var(--app-bg, #effbf5)',
+          bg: 'var(--app-bg, #dff5e9)',
           surface: 'var(--app-surface, #f8fffb)',
           text: 'var(--app-text, #0b2f1d)',
           muted: 'var(--app-muted, #35664d)',

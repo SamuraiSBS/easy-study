@@ -19,7 +19,7 @@ export function getTelegramInitData() {
 
 export function applyTelegramTheme() {
   const root = document.documentElement;
-  root.style.setProperty('--app-bg', '#effbf5');
+  root.style.setProperty('--app-bg', '#dff5e9');
   root.style.setProperty('--app-surface', '#f8fffb');
   root.style.setProperty('--app-text', '#0b2f1d');
   root.style.setProperty('--app-muted', '#35664d');

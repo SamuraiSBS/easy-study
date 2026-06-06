@@ -36,7 +36,7 @@ export function Layout({ user, children }: LayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-app-bg text-app-text">
+    <div className="app-page-gradient min-h-screen text-app-text">
       <header className="app-shell-gradient sticky top-0 z-20 border-b border-app-line backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} transition={springTransition}>
