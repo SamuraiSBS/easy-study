@@ -12,8 +12,8 @@ type LayoutProps = {
 
 function navClass(isActive: boolean) {
   return [
-    'relative flex min-h-12 flex-1 overflow-hidden rounded-md px-2 text-xs font-medium transition-colors',
-    isActive ? 'text-app-accentText' : 'text-app-muted hover:bg-white/45 hover:text-app-text'
+    'relative flex min-h-12 flex-1 overflow-hidden rounded-full px-2 text-xs font-medium transition-colors',
+    isActive ? 'text-app-accentText' : 'text-app-muted hover:bg-white/60 hover:text-app-text'
   ].join(' ');
 }
 
@@ -41,7 +41,7 @@ export function Layout({ user, children }: LayoutProps) {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} transition={springTransition}>
             <Link to="/" className="flex items-center gap-3">
-              <span className="app-accent-gradient flex h-9 w-9 items-center justify-center rounded-md text-sm font-bold text-app-accentText">
+              <span className="app-accent-gradient flex h-9 w-9 items-center justify-center rounded-2xl text-sm font-bold text-app-accentText">
                 ES
               </span>
               <span>
@@ -62,36 +62,38 @@ export function Layout({ user, children }: LayoutProps) {
       <nav className="app-bottom-gradient fixed inset-x-0 bottom-0 z-30 border-t border-app-line pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur">
         <LayoutGroup id="bottom-navigation">
           <div className="mx-auto flex max-w-5xl gap-2 px-4">
-            {navItems.map((item) => {
-              const isActive = isActiveRoute(location.pathname, item.path);
-              const Icon = item.icon;
+            <div className="flex w-full gap-2 rounded-full border border-app-line bg-white/55 p-1 shadow-soft backdrop-blur">
+              {navItems.map((item) => {
+                const isActive = isActiveRoute(location.pathname, item.path);
+                const Icon = item.icon;
 
-              return (
-                <motion.button
-                  key={item.path}
-                  type="button"
-                  className={navClass(isActive)}
-                  aria-current={isActive ? 'page' : undefined}
-                  onClick={() => navigate(item.path)}
-                  whileTap={{ scale: 0.96 }}
-                  transition={springTransition}
-                >
-                  {isActive ? (
-                    <motion.span
-                      layoutId="active-bottom-tab"
-                      className="app-accent-gradient absolute inset-0 rounded-md"
-                      transition={springTransition}
-                    />
-                  ) : null}
-                  <span className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-1">
-                    <motion.span animate={{ y: isActive ? -2 : 0, scale: isActive ? 1.08 : 1 }} transition={springTransition}>
-                      <Icon size={20} />
-                    </motion.span>
-                    {item.label}
-                  </span>
-                </motion.button>
-              );
-            })}
+                return (
+                  <motion.button
+                    key={item.path}
+                    type="button"
+                    className={navClass(isActive)}
+                    aria-current={isActive ? 'page' : undefined}
+                    onClick={() => navigate(item.path)}
+                    whileTap={{ scale: 0.96 }}
+                    transition={springTransition}
+                  >
+                    {isActive ? (
+                      <motion.span
+                        layoutId="active-bottom-tab"
+                        className="app-accent-gradient absolute inset-0 rounded-full"
+                        transition={springTransition}
+                      />
+                    ) : null}
+                    <span className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-1">
+                      <motion.span animate={{ y: isActive ? -2 : 0, scale: isActive ? 1.08 : 1 }} transition={springTransition}>
+                        <Icon size={20} />
+                      </motion.span>
+                      {item.label}
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </div>
           </div>
         </LayoutGroup>
       </nav>

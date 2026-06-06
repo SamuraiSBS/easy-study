@@ -52,7 +52,7 @@ export function StatusBadge({ status }: { status: OrderStatus }) {
   return (
     <motion.span
       key={status}
-      className={`inline-flex items-center rounded-md border px-2 py-1 text-xs font-medium ${STATUS_CLASS[status]}`}
+      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-medium ${STATUS_CLASS[status]}`}
       initial={{ opacity: 0, y: -4, scale: 0.92 }}
       animate={statusAnimation(status)}
       transition={{ ...springTransition, duration: 0.42 }}

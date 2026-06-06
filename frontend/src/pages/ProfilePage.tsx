@@ -19,7 +19,7 @@ export function ProfilePage({ user }: ProfilePageProps) {
   if (!user) {
     return (
       <motion.section
-        className="app-card rounded-lg border border-app-line bg-app-surface p-5 shadow-soft"
+        className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft"
         initial={{ opacity: 0, y: 16, scale: 0.985 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={springTransition}
@@ -34,11 +34,11 @@ export function ProfilePage({ user }: ProfilePageProps) {
 
   return (
     <AnimatedList className="space-y-4">
-      <motion.section className="app-card app-card-strong rounded-lg border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
+      <motion.section className="app-card app-card-strong rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <div className="flex items-center gap-4">
           {user.photo_url ? (
             <motion.img
-              className="h-16 w-16 rounded-md object-cover"
+              className="h-16 w-16 rounded-2xl object-cover"
               src={user.photo_url}
               alt=""
               initial={{ scale: 0.88, opacity: 0 }}
@@ -47,7 +47,7 @@ export function ProfilePage({ user }: ProfilePageProps) {
             />
           ) : (
             <motion.span
-              className="app-soft-gradient flex h-16 w-16 items-center justify-center rounded-md text-app-accent"
+              className="app-soft-gradient flex h-16 w-16 items-center justify-center rounded-2xl text-app-accent"
               initial={{ scale: 0.88, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={springTransition}
@@ -62,7 +62,7 @@ export function ProfilePage({ user }: ProfilePageProps) {
         </div>
       </motion.section>
 
-      <motion.section className="app-card rounded-lg border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
+      <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <h2 className="text-sm font-semibold uppercase tracking-wide text-app-muted">Данные</h2>
         <dl className="mt-4 space-y-4 text-sm">
           <div className="flex items-start justify-between gap-4">

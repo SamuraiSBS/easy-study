@@ -32,7 +32,7 @@ export function OrderDetailPage() {
       >
         <ArrowLeft size={18} /> К заказам
       </MotionLink>
-      <AnimatedSection className="app-card rounded-lg border border-app-line bg-app-surface p-5 shadow-soft">
+      <AnimatedSection className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft">
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="text-sm text-app-muted">Заказ #{order.id}</div>
@@ -58,7 +58,7 @@ export function OrderDetailPage() {
         {order.status === 'done' ? (
           <MotionLink
             to={`/orders/${order.id}/review`}
-            className="app-accent-gradient app-cta-once mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2 text-sm font-semibold text-app-accentText"
+            className="app-accent-gradient app-cta-once mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold text-app-accentText"
             whileHover={{ y: -2, scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
             transition={springTransition}

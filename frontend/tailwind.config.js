@@ -17,7 +17,7 @@ export default {
         }
       },
       boxShadow: {
-        soft: '0 12px 28px rgba(15, 143, 77, 0.1)'
+        soft: '0 18px 42px rgba(15, 143, 77, 0.09)'
       }
     }
   },

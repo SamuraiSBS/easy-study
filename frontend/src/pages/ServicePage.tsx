@@ -32,7 +32,7 @@ export function ServicePage() {
       >
         <ArrowLeft size={18} /> Назад
       </MotionLink>
-      <AnimatedSection className="app-card app-card-strong rounded-lg border border-app-line bg-app-surface p-5 shadow-soft">
+      <AnimatedSection className="app-card app-card-strong rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft">
         <div className="text-sm font-medium text-app-accent">{service.category}</div>
         <h1 className="mt-2 text-2xl font-semibold leading-tight">{service.title}</h1>
         <p className="mt-4 whitespace-pre-line text-sm leading-6 text-app-muted">{service.description}</p>
@@ -41,7 +41,7 @@ export function ServicePage() {
         </div>
         <MotionLink
           to={`/services/${service.id}/order`}
-          className="app-accent-gradient app-cta-once mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2 text-sm font-semibold text-app-accentText"
+          className="app-accent-gradient app-cta-once mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold text-app-accentText"
           whileHover={{ y: -2, scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
           transition={springTransition}

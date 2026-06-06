@@ -48,7 +48,7 @@ export function OrderFormPage() {
 
   return (
     <AnimatedList className="space-y-4" as="form" onSubmit={handleSubmit}>
-      <motion.section className="app-card rounded-lg border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
+      <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <div className="text-sm text-app-muted">Заявка на услугу</div>
         <h1 className="mt-1 text-xl font-semibold">{service.title}</h1>
         <div className="mt-3 text-sm font-semibold text-app-accent">
@@ -56,13 +56,13 @@ export function OrderFormPage() {
         </div>
       </motion.section>
 
-      <motion.section className="app-card rounded-lg border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
+      <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <label className="block text-sm font-semibold" htmlFor="customer-comment">
           Комментарий
         </label>
         <textarea
           id="customer-comment"
-          className="mt-3 min-h-40 w-full resize-y rounded-md border border-app-line bg-white px-3 py-3 text-sm outline-none transition-colors focus:border-app-accent"
+          className="mt-3 min-h-40 w-full resize-y rounded-2xl border border-app-line bg-white px-3 py-3 text-sm outline-none transition-colors focus:border-app-accent"
           value={comment}
           onChange={(event) => setComment(event.target.value)}
           placeholder="Тема, срок, требования, объем, пожелания"
@@ -75,7 +75,7 @@ export function OrderFormPage() {
 
       <AnimatedButton
         type="submit"
-        className="app-accent-gradient app-cta-once inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-app-accentText disabled:opacity-60"
+        className="app-accent-gradient app-cta-once inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-app-accentText disabled:opacity-60"
         disabled={submitting}
       >
         <Send size={18} /> {submitting ? 'Отправка' : 'Подтвердить заявку'}

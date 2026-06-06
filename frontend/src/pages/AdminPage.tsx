@@ -32,11 +32,11 @@ function AdminTabs({ tab, setTab }: { tab: Tab; setTab: (tab: Tab) => void }) {
 
   return (
     <LayoutGroup id="admin-tabs">
-      <div className="flex gap-2 overflow-x-auto pb-1">
+      <div className="flex gap-2 overflow-x-auto rounded-full border border-app-line bg-white/55 p-1 shadow-soft backdrop-blur">
         {tabs.map((item) => (
           <motion.button
             key={item.id}
-            className={`relative min-h-10 overflow-hidden rounded-md px-4 text-sm font-medium ${
+            className={`relative min-h-10 overflow-hidden rounded-full px-4 text-sm font-medium ${
               tab === item.id ? 'text-app-accentText' : 'app-card bg-app-surface text-app-muted'
             }`}
             onClick={() => setTab(item.id)}
@@ -45,7 +45,7 @@ function AdminTabs({ tab, setTab }: { tab: Tab; setTab: (tab: Tab) => void }) {
             transition={springTransition}
           >
             {tab === item.id ? (
-              <motion.span layoutId="active-admin-tab" className="app-accent-gradient absolute inset-0 rounded-md" transition={springTransition} />
+              <motion.span layoutId="active-admin-tab" className="app-accent-gradient absolute inset-0 rounded-full" transition={springTransition} />
             ) : null}
             <span className="relative z-10">{item.label}</span>
           </motion.button>
@@ -96,7 +96,7 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
         <div className="flex items-center gap-2">
           <Filter size={18} className="text-app-muted" />
           <select
-            className="rounded-md border border-app-line bg-app-surface px-3 py-2 text-sm"
+            className="rounded-2xl border border-app-line bg-app-surface px-3 py-2 text-sm"
             value={statusFilter}
             onChange={(event) => setStatusFilter(event.target.value as OrderStatus | 'all')}
           >
@@ -112,7 +112,7 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
         {orders?.map((order: AdminOrder) => (
           <motion.button
             key={order.id}
-            className={`block w-full rounded-lg border p-4 text-left shadow-soft ${
+            className={`block w-full rounded-3xl border p-4 text-left shadow-soft ${
               selected?.id === order.id ? 'app-card border-app-accent bg-app-surface' : 'app-card border-app-line bg-app-surface'
             }`}
             onClick={() => setSelectedId(order.id)}
@@ -134,7 +134,7 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
       </AnimatedList>
 
       <motion.aside
-        className="app-card rounded-lg border border-app-line bg-app-surface p-4 shadow-soft"
+        className="app-card rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft"
         initial={{ opacity: 0, x: 18, scale: 0.985 }}
         animate={{ opacity: 1, x: 0, scale: 1 }}
         transition={springTransition}
@@ -161,7 +161,7 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
             <label className="block text-sm font-semibold">
               Статус
               <select
-                className="mt-2 w-full rounded-md border border-app-line bg-white px-3 py-2"
+                className="mt-2 w-full rounded-2xl border border-app-line bg-white px-3 py-2"
                 value={nextStatus}
                 onChange={(event) => setNextStatus(event.target.value as OrderStatus)}
               >
@@ -175,14 +175,14 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
             <label className="block text-sm font-semibold">
               Комментарий администратора
               <textarea
-                className="mt-2 min-h-28 w-full resize-y rounded-md border border-app-line bg-white px-3 py-2"
+                className="mt-2 min-h-28 w-full resize-y rounded-2xl border border-app-line bg-white px-3 py-2"
                 value={adminComment}
                 onChange={(event) => setAdminComment(event.target.value)}
               />
             </label>
             <AnimatedButton
               type="button"
-              className="app-accent-gradient inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold text-app-accentText"
+              className="app-accent-gradient inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-app-accentText"
               onClick={() => void saveOrder()}
             >
               <Save size={17} /> Сохранить
@@ -216,7 +216,7 @@ function ServiceForm({ service, onSaved }: { service?: Service; onSaved: () => P
 
   return (
     <motion.form
-      className="app-card rounded-lg border border-app-line bg-app-surface p-4 shadow-soft"
+      className="app-card rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft"
       onSubmit={submit}
       initial={{ opacity: 0, x: 18, scale: 0.985 }}
       animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -225,21 +225,21 @@ function ServiceForm({ service, onSaved }: { service?: Service; onSaved: () => P
       <h2 className="font-semibold">{service ? 'Редактировать услугу' : 'Новая услуга'}</h2>
       <div className="mt-4 grid gap-3">
         <input
-          className="rounded-md border border-app-line px-3 py-2 text-sm"
+          className="rounded-2xl border border-app-line px-3 py-2 text-sm"
           placeholder="Название"
           value={form.title}
           onChange={(event) => setForm({ ...form, title: event.target.value })}
           required
         />
         <textarea
-          className="min-h-24 rounded-md border border-app-line px-3 py-2 text-sm"
+          className="min-h-24 rounded-2xl border border-app-line px-3 py-2 text-sm"
           placeholder="Описание"
           value={form.description}
           onChange={(event) => setForm({ ...form, description: event.target.value })}
           required
         />
         <input
-          className="rounded-md border border-app-line px-3 py-2 text-sm"
+          className="rounded-2xl border border-app-line px-3 py-2 text-sm"
           placeholder="Категория"
           value={form.category}
           onChange={(event) => setForm({ ...form, category: event.target.value })}
@@ -247,14 +247,14 @@ function ServiceForm({ service, onSaved }: { service?: Service; onSaved: () => P
         />
         <div className="grid grid-cols-2 gap-3">
           <input
-            className="rounded-md border border-app-line px-3 py-2 text-sm"
+            className="rounded-2xl border border-app-line px-3 py-2 text-sm"
             type="number"
             min={0}
             value={form.price_from}
             onChange={(event) => setForm({ ...form, price_from: Number(event.target.value) })}
           />
           <input
-            className="rounded-md border border-app-line px-3 py-2 text-sm"
+            className="rounded-2xl border border-app-line px-3 py-2 text-sm"
             type="number"
             min={0}
             value={form.price_to ?? ''}
@@ -272,13 +272,13 @@ function ServiceForm({ service, onSaved }: { service?: Service; onSaved: () => P
             Активна
           </label>
           <input
-            className="w-24 rounded-md border border-app-line px-3 py-2 text-sm"
+            className="w-24 rounded-2xl border border-app-line px-3 py-2 text-sm"
             type="number"
             value={form.order_num}
             onChange={(event) => setForm({ ...form, order_num: Number(event.target.value) })}
           />
         </div>
-        <AnimatedButton className="app-accent-gradient inline-flex min-h-10 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold text-app-accentText">
+        <AnimatedButton className="app-accent-gradient inline-flex min-h-10 items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-app-accentText">
           {service ? <Save size={17} /> : <Plus size={17} />} {service ? 'Сохранить услугу' : 'Добавить услугу'}
         </AnimatedButton>
       </div>
@@ -321,7 +321,7 @@ function ServicesAdmin() {
         {services?.map((service) => (
           <motion.div
             key={service.id}
-            className="app-card rounded-lg border border-app-line bg-app-surface p-4 shadow-soft"
+            className="app-card rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft"
             variants={listItemVariants}
             whileHover={{ y: -2, scale: 1.005 }}
             transition={springTransition}
@@ -334,17 +334,17 @@ function ServicesAdmin() {
                   <Price priceFrom={service.price_from} priceTo={service.price_to} />
                 </div>
               </div>
-              <span className={`rounded-md px-2 py-1 text-xs ${service.is_active ? 'app-soft-gradient text-app-accent' : 'bg-app-line text-app-muted'}`}>
+              <span className={`rounded-full px-2.5 py-1 text-xs ${service.is_active ? 'app-soft-gradient text-app-accent' : 'bg-app-line text-app-muted'}`}>
                 {service.is_active ? 'активна' : 'скрыта'}
               </span>
             </div>
             <div className="mt-4 flex gap-2">
-              <AnimatedButton type="button" className="rounded-md border border-app-line px-3 py-2 text-sm" onClick={() => setEditingId(service.id)}>
+              <AnimatedButton type="button" className="rounded-full border border-app-line px-3 py-2 text-sm" onClick={() => setEditingId(service.id)}>
                 Изменить
               </AnimatedButton>
               <AnimatedButton
                 type="button"
-                className="inline-flex items-center gap-2 rounded-md border border-app-line px-3 py-2 text-sm text-app-muted"
+                className="inline-flex items-center gap-2 rounded-full border border-app-line px-3 py-2 text-sm text-app-muted"
                 onClick={() => void deleteService(service.id)}
               >
                 <Trash2 size={16} /> Скрыть
@@ -374,7 +374,7 @@ function ReviewsAdmin() {
       {reviews?.map((review) => (
         <motion.div
           key={review.id}
-          className="app-card rounded-lg border border-app-line bg-app-surface p-4 shadow-soft"
+          className="app-card rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft"
           variants={listItemVariants}
           whileHover={{ y: -2, scale: 1.005 }}
           transition={springTransition}
@@ -386,7 +386,7 @@ function ReviewsAdmin() {
             </div>
             <AnimatedButton
               type="button"
-              className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm ${
+              className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm ${
                 review.is_published ? 'app-soft-gradient text-app-accent' : 'bg-app-line text-app-muted'
               }`}
               onClick={() => void api.admin.updateReview(review.id, !review.is_published).then(reload)}
@@ -416,7 +416,7 @@ function UsersAdmin() {
       {users?.map((user: User) => (
         <motion.div
           key={user.id}
-          className="app-card rounded-lg border border-app-line bg-app-surface p-4 shadow-soft"
+          className="app-card rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft"
           variants={listItemVariants}
           whileHover={{ y: -2, scale: 1.005 }}
           transition={springTransition}
@@ -428,7 +428,7 @@ function UsersAdmin() {
                 {user.username ? `@${user.username}` : 'без username'} · {user.telegram_id}
               </div>
             </div>
-            {user.is_admin ? <span className="rounded-md bg-app-line px-2 py-1 text-xs text-app-accent">admin</span> : null}
+            {user.is_admin ? <span className="rounded-full bg-app-line px-2.5 py-1 text-xs text-app-accent">admin</span> : null}
           </div>
         </motion.div>
       ))}
@@ -446,7 +446,7 @@ export function AdminPage() {
       <AnimatedSection className="flex items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold">Админка</h1>
         {orderId ? (
-          <Link className="rounded-md border border-app-line px-3 py-2 text-sm" to="/admin">
+          <Link className="rounded-full border border-app-line px-3 py-2 text-sm" to="/admin">
             Все заказы
           </Link>
         ) : null}

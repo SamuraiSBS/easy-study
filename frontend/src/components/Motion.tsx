@@ -83,13 +83,13 @@ export function PageTransition({ children, direction = 1 }: PageTransitionProps)
 export function SuccessBurst({ title }: { title: string }) {
   return (
     <motion.div
-      className="app-card app-card-strong flex min-h-52 flex-col items-center justify-center rounded-lg border border-app-line bg-app-surface p-6 text-center shadow-soft"
+      className="app-card app-card-strong flex min-h-52 flex-col items-center justify-center rounded-3xl border border-app-line bg-app-surface p-6 text-center shadow-soft"
       initial={{ opacity: 0, y: 16, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={springTransition}
     >
       <motion.div
-        className="app-accent-gradient flex h-16 w-16 items-center justify-center rounded-md text-3xl font-semibold text-app-accentText"
+        className="app-accent-gradient flex h-16 w-16 items-center justify-center rounded-2xl text-3xl font-semibold text-app-accentText"
         initial={{ scale: 0.5, rotate: -14 }}
         animate={{ scale: [0.5, 1.14, 1], rotate: [-14, 5, 0] }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}

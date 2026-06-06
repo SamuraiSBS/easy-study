@@ -33,7 +33,7 @@ export function HomePage() {
 
   return (
     <div className="space-y-5">
-      <AnimatedSection className="app-card app-card-strong rounded-lg border border-app-line bg-app-surface p-5 shadow-soft">
+      <AnimatedSection className="app-card app-card-strong rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft">
         <h1 className="text-2xl font-semibold leading-tight">Выберите учебную работу</h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-app-muted">
           Оставьте заявку с комментарием, и администратор напишет вам в Telegram для деталей.
@@ -50,7 +50,7 @@ export function HomePage() {
               <MotionLink
                 key={service.id}
                 to={`/services/${service.id}`}
-                className="app-card group rounded-lg border border-app-line bg-app-surface p-4 shadow-soft transition-colors hover:border-app-accent"
+                className="app-card group rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft transition-colors hover:border-app-accent"
                 variants={listItemVariants}
                 whileHover={{ y: -3, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
@@ -58,7 +58,7 @@ export function HomePage() {
               >
                 <div className="flex items-start gap-3">
                   <motion.span
-                    className="app-soft-gradient flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-app-accent"
+                    className="app-soft-gradient flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-app-accent"
                     whileHover={{ rotate: -3, scale: 1.06 }}
                     transition={springTransition}
                   >

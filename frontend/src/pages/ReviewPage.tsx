@@ -48,19 +48,19 @@ export function ReviewPage() {
 
   return (
     <AnimatedList className="space-y-4" as="form" onSubmit={handleSubmit}>
-      <motion.section className="app-card rounded-lg border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
+      <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <div className="text-sm text-app-muted">Отзыв к заказу #{order.id}</div>
         <h1 className="mt-1 text-xl font-semibold">{order.title_snapshot}</h1>
       </motion.section>
 
-      <motion.section className="app-card rounded-lg border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
+      <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <div className="text-sm font-semibold">Оценка</div>
         <div className="mt-3 flex gap-2">
           {[1, 2, 3, 4, 5].map((value) => (
             <motion.button
               key={value}
               type="button"
-              className={`flex h-11 w-11 items-center justify-center rounded-md border ${
+              className={`flex h-11 w-11 items-center justify-center rounded-full border ${
                 value <= rating ? 'app-soft-gradient border-app-accent text-app-accent' : 'border-app-line text-app-muted'
               }`}
               onClick={() => setRating(value)}
@@ -79,7 +79,7 @@ export function ReviewPage() {
         </label>
         <textarea
           id="review-text"
-          className="mt-3 min-h-36 w-full resize-y rounded-md border border-app-line bg-white px-3 py-3 text-sm outline-none transition-colors focus:border-app-accent"
+          className="mt-3 min-h-36 w-full resize-y rounded-2xl border border-app-line bg-white px-3 py-3 text-sm outline-none transition-colors focus:border-app-accent"
           value={text}
           onChange={(event) => setText(event.target.value)}
           placeholder="Что понравилось, как прошла работа"
@@ -92,7 +92,7 @@ export function ReviewPage() {
 
       <AnimatedButton
         type="submit"
-        className="app-accent-gradient app-cta-once inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-semibold text-app-accentText disabled:opacity-60"
+        className="app-accent-gradient app-cta-once inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-app-accentText disabled:opacity-60"
         disabled={submitting}
       >
         <Star size={18} /> {submitting ? 'Отправка' : 'Отправить отзыв'}

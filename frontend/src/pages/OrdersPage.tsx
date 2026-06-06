@@ -32,7 +32,7 @@ export function OrdersPage() {
           <MotionLink
             key={order.id}
             to={`/orders/${order.id}`}
-            className="app-card group block rounded-lg border border-app-line bg-app-surface p-4 shadow-soft transition-colors hover:border-app-accent"
+            className="app-card group block rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft transition-colors hover:border-app-accent"
             variants={listItemVariants}
             whileHover={{ y: -3, scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
@@ -50,7 +50,7 @@ export function OrdersPage() {
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
               {order.status === 'done' ? (
-                <span className="app-soft-gradient inline-flex items-center gap-1 rounded-md px-2 py-1 text-app-accent">
+                <span className="app-soft-gradient inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-app-accent">
                   <Star size={15} /> Можно оставить отзыв
                 </span>
               ) : (
