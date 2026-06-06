@@ -19,29 +19,13 @@ export function getTelegramInitData() {
 
 export function applyTelegramTheme() {
   const root = document.documentElement;
-  try {
-    const theme = WebApp.themeParams;
-    if (theme.bg_color) {
-      root.style.setProperty('--app-bg', theme.bg_color);
-    }
-    if (theme.secondary_bg_color) {
-      root.style.setProperty('--app-surface', theme.secondary_bg_color);
-    }
-    if (theme.text_color) {
-      root.style.setProperty('--app-text', theme.text_color);
-    }
-    if (theme.hint_color) {
-      root.style.setProperty('--app-muted', theme.hint_color);
-    }
-    if (theme.button_color) {
-      root.style.setProperty('--app-accent', theme.button_color);
-    }
-    if (theme.button_text_color) {
-      root.style.setProperty('--app-accent-text', theme.button_text_color);
-    }
-  } catch {
-    root.style.setProperty('--app-bg', '#f6f7f4');
-  }
+  root.style.setProperty('--app-bg', '#eafbf3');
+  root.style.setProperty('--app-surface', '#f8fffb');
+  root.style.setProperty('--app-text', '#0d2f1f');
+  root.style.setProperty('--app-muted', '#4d735f');
+  root.style.setProperty('--app-line', '#b8f0d0');
+  root.style.setProperty('--app-accent', '#2ed67d');
+  root.style.setProperty('--app-accent-text', '#ffffff');
 }
 
 export function showBackButton(onClick: () => void) {
@@ -64,4 +48,3 @@ export function hapticSuccess() {
     // Haptics are available only inside Telegram.
   }
 }
-

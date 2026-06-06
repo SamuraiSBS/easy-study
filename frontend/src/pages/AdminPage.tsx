@@ -1,6 +1,8 @@
+import { LayoutGroup, motion } from 'framer-motion';
 import { Check, Filter, Plus, Save, Trash2 } from 'lucide-react';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { AnimatedButton, AnimatedList, AnimatedSection, listItemVariants, springTransition } from '../components/Motion';
 import { Price } from '../components/Price';
 import { EmptyState, ErrorState, LoadingState } from '../components/State';
 import { ORDER_STATUS_LABELS, StatusBadge } from '../components/StatusBadge';
@@ -29,19 +31,27 @@ function AdminTabs({ tab, setTab }: { tab: Tab; setTab: (tab: Tab) => void }) {
   ];
 
   return (
-    <div className="flex gap-2 overflow-x-auto pb-1">
-      {tabs.map((item) => (
-        <button
-          key={item.id}
-          className={`min-h-10 rounded-md px-4 text-sm font-medium ${
-            tab === item.id ? 'bg-app-accent text-app-accentText' : 'bg-app-surface text-app-muted'
-          }`}
-          onClick={() => setTab(item.id)}
-        >
-          {item.label}
-        </button>
-      ))}
-    </div>
+    <LayoutGroup id="admin-tabs">
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {tabs.map((item) => (
+          <motion.button
+            key={item.id}
+            className={`relative min-h-10 overflow-hidden rounded-md px-4 text-sm font-medium ${
+              tab === item.id ? 'text-app-accentText' : 'app-card bg-app-surface text-app-muted'
+            }`}
+            onClick={() => setTab(item.id)}
+            whileHover={{ y: -2, scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            transition={springTransition}
+          >
+            {tab === item.id ? (
+              <motion.span layoutId="active-admin-tab" className="app-accent-gradient absolute inset-0 rounded-md" transition={springTransition} />
+            ) : null}
+            <span className="relative z-10">{item.label}</span>
+          </motion.button>
+        ))}
+      </div>
+    </LayoutGroup>
   );
 }
 
@@ -82,7 +92,7 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
 
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-      <section className="space-y-3">
+      <AnimatedList className="space-y-3">
         <div className="flex items-center gap-2">
           <Filter size={18} className="text-app-muted" />
           <select
@@ -99,13 +109,17 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
           </select>
         </div>
         {orders?.length === 0 ? <EmptyState title="Заказов нет" /> : null}
-        {orders?.map((order) => (
-          <button
+        {orders?.map((order: AdminOrder) => (
+          <motion.button
             key={order.id}
             className={`block w-full rounded-lg border p-4 text-left shadow-soft ${
-              selected?.id === order.id ? 'border-app-accent bg-app-surface' : 'border-app-line bg-app-surface'
+              selected?.id === order.id ? 'app-card border-app-accent bg-app-surface' : 'app-card border-app-line bg-app-surface'
             }`}
             onClick={() => setSelectedId(order.id)}
+            variants={listItemVariants}
+            whileHover={{ y: -2, scale: 1.01 }}
+            whileTap={{ scale: 0.98 }}
+            transition={springTransition}
           >
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -115,11 +129,16 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
               </div>
               <StatusBadge status={order.status} />
             </div>
-          </button>
+          </motion.button>
         ))}
-      </section>
+      </AnimatedList>
 
-      <aside className="rounded-lg border border-app-line bg-app-surface p-4 shadow-soft">
+      <motion.aside
+        className="app-card rounded-lg border border-app-line bg-app-surface p-4 shadow-soft"
+        initial={{ opacity: 0, x: 18, scale: 0.985 }}
+        animate={{ opacity: 1, x: 0, scale: 1 }}
+        transition={springTransition}
+      >
         {selected ? (
           <div className="space-y-4">
             <div>
@@ -161,18 +180,18 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
                 onChange={(event) => setAdminComment(event.target.value)}
               />
             </label>
-            <button
+            <AnimatedButton
               type="button"
-              className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md bg-app-accent px-4 py-2 text-sm font-semibold text-app-accentText"
+              className="app-accent-gradient inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold text-app-accentText"
               onClick={() => void saveOrder()}
             >
               <Save size={17} /> Сохранить
-            </button>
+            </AnimatedButton>
           </div>
         ) : (
           <EmptyState title="Выберите заказ" />
         )}
-      </aside>
+      </motion.aside>
     </div>
   );
 }
@@ -196,7 +215,13 @@ function ServiceForm({ service, onSaved }: { service?: Service; onSaved: () => P
   }
 
   return (
-    <form className="rounded-lg border border-app-line bg-app-surface p-4 shadow-soft" onSubmit={submit}>
+    <motion.form
+      className="app-card rounded-lg border border-app-line bg-app-surface p-4 shadow-soft"
+      onSubmit={submit}
+      initial={{ opacity: 0, x: 18, scale: 0.985 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      transition={springTransition}
+    >
       <h2 className="font-semibold">{service ? 'Редактировать услугу' : 'Новая услуга'}</h2>
       <div className="mt-4 grid gap-3">
         <input
@@ -253,11 +278,11 @@ function ServiceForm({ service, onSaved }: { service?: Service; onSaved: () => P
             onChange={(event) => setForm({ ...form, order_num: Number(event.target.value) })}
           />
         </div>
-        <button className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md bg-app-accent px-4 py-2 text-sm font-semibold text-app-accentText">
+        <AnimatedButton className="app-accent-gradient inline-flex min-h-10 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold text-app-accentText">
           {service ? <Save size={17} /> : <Plus size={17} />} {service ? 'Сохранить услугу' : 'Добавить услугу'}
-        </button>
+        </AnimatedButton>
       </div>
-    </form>
+    </motion.form>
   );
 }
 
@@ -292,9 +317,15 @@ function ServicesAdmin() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-      <section className="space-y-3">
+      <AnimatedList className="space-y-3">
         {services?.map((service) => (
-          <div key={service.id} className="rounded-lg border border-app-line bg-app-surface p-4 shadow-soft">
+          <motion.div
+            key={service.id}
+            className="app-card rounded-lg border border-app-line bg-app-surface p-4 shadow-soft"
+            variants={listItemVariants}
+            whileHover={{ y: -2, scale: 1.005 }}
+            transition={springTransition}
+          >
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="font-semibold">{service.title}</h3>
@@ -303,25 +334,25 @@ function ServicesAdmin() {
                   <Price priceFrom={service.price_from} priceTo={service.price_to} />
                 </div>
               </div>
-              <span className={`rounded-md px-2 py-1 text-xs ${service.is_active ? 'bg-emerald-50 text-emerald-800' : 'bg-slate-100 text-slate-600'}`}>
+              <span className={`rounded-md px-2 py-1 text-xs ${service.is_active ? 'app-soft-gradient text-app-accent' : 'bg-app-line text-app-muted'}`}>
                 {service.is_active ? 'активна' : 'скрыта'}
               </span>
             </div>
             <div className="mt-4 flex gap-2">
-            <button type="button" className="rounded-md border border-app-line px-3 py-2 text-sm" onClick={() => setEditingId(service.id)}>
-              Изменить
-            </button>
-            <button
-              type="button"
-              className="inline-flex items-center gap-2 rounded-md border border-rose-200 px-3 py-2 text-sm text-rose-700"
-              onClick={() => void deleteService(service.id)}
-            >
+              <AnimatedButton type="button" className="rounded-md border border-app-line px-3 py-2 text-sm" onClick={() => setEditingId(service.id)}>
+                Изменить
+              </AnimatedButton>
+              <AnimatedButton
+                type="button"
+                className="inline-flex items-center gap-2 rounded-md border border-app-line px-3 py-2 text-sm text-app-muted"
+                onClick={() => void deleteService(service.id)}
+              >
                 <Trash2 size={16} /> Скрыть
-              </button>
+              </AnimatedButton>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </section>
+      </AnimatedList>
       <ServiceForm service={editingService} onSaved={reload} />
     </div>
   );
@@ -338,29 +369,35 @@ function ReviewsAdmin() {
   }
 
   return (
-    <div className="space-y-3">
+    <AnimatedList className="space-y-3">
       {reviews?.length === 0 ? <EmptyState title="Отзывов пока нет" /> : null}
       {reviews?.map((review) => (
-        <div key={review.id} className="rounded-lg border border-app-line bg-app-surface p-4 shadow-soft">
+        <motion.div
+          key={review.id}
+          className="app-card rounded-lg border border-app-line bg-app-surface p-4 shadow-soft"
+          variants={listItemVariants}
+          whileHover={{ y: -2, scale: 1.005 }}
+          transition={springTransition}
+        >
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="font-semibold">{review.rating}/5</div>
               <div className="mt-1 text-sm text-app-muted">{review.user.first_name || review.user.username || review.user.telegram_id}</div>
             </div>
-            <button
+            <AnimatedButton
               type="button"
               className={`inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm ${
-                review.is_published ? 'bg-emerald-50 text-emerald-800' : 'bg-app-line text-app-muted'
+                review.is_published ? 'app-soft-gradient text-app-accent' : 'bg-app-line text-app-muted'
               }`}
               onClick={() => void api.admin.updateReview(review.id, !review.is_published).then(reload)}
             >
               <Check size={16} /> {review.is_published ? 'Опубликован' : 'Скрыт'}
-            </button>
+            </AnimatedButton>
           </div>
           <p className="mt-3 whitespace-pre-line text-sm leading-6 text-app-muted">{review.text}</p>
-        </div>
+        </motion.div>
       ))}
-    </div>
+    </AnimatedList>
   );
 }
 
@@ -375,9 +412,15 @@ function UsersAdmin() {
   }
 
   return (
-    <div className="space-y-3">
+    <AnimatedList className="space-y-3">
       {users?.map((user: User) => (
-        <div key={user.id} className="rounded-lg border border-app-line bg-app-surface p-4 shadow-soft">
+        <motion.div
+          key={user.id}
+          className="app-card rounded-lg border border-app-line bg-app-surface p-4 shadow-soft"
+          variants={listItemVariants}
+          whileHover={{ y: -2, scale: 1.005 }}
+          transition={springTransition}
+        >
           <div className="flex items-start justify-between gap-3">
             <div>
               <div className="font-semibold">{user.first_name || user.username || `ID ${user.telegram_id}`}</div>
@@ -387,9 +430,9 @@ function UsersAdmin() {
             </div>
             {user.is_admin ? <span className="rounded-md bg-app-line px-2 py-1 text-xs text-app-accent">admin</span> : null}
           </div>
-        </div>
+        </motion.div>
       ))}
-    </div>
+    </AnimatedList>
   );
 }
 
@@ -400,15 +443,17 @@ export function AdminPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-3">
+      <AnimatedSection className="flex items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold">Админка</h1>
         {orderId ? (
           <Link className="rounded-md border border-app-line px-3 py-2 text-sm" to="/admin">
             Все заказы
           </Link>
         ) : null}
-      </div>
-      <AdminTabs tab={tab} setTab={setTab} />
+      </AnimatedSection>
+      <AnimatedSection delay={0.04}>
+        <AdminTabs tab={tab} setTab={setTab} />
+      </AnimatedSection>
       {tab === 'orders' ? <OrdersAdmin initialOrderId={orderId} /> : null}
       {tab === 'services' ? <ServicesAdmin /> : null}
       {tab === 'reviews' ? <ReviewsAdmin /> : null}

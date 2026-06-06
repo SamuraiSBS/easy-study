@@ -73,6 +73,24 @@ window.__EASY_STUDY_CONFIG__ = {
 
 Если нужно просто запустить проект локально, не сканируйте весь репозиторий. Достаточно проверить этот раздел README и выполнить команды ниже.
 
+Перед установкой или запуском проверьте уже готовые части:
+
+```powershell
+Test-Path backend\.venv
+Test-Path frontend\node_modules
+Get-Content frontend\public\runtime-config.js
+curl.exe -s -o NUL -w "%{http_code}" http://localhost:8000/api/services
+curl.exe -s -o NUL -w "%{http_code}" http://localhost:5173
+```
+
+- Если первые две команды возвращают `True`, зависимости уже стоят и переустанавливать их не нужно.
+- Если `curl` возвращает `200`, соответствующий сервер уже запущен; не запускайте второй экземпляр на том же порту.
+- `Get-NetTCPConnection` может падать с `Отказано в доступе`; для обычной проверки запуска достаточно `curl`.
+- Backend можно запускать без Docker/PostgreSQL через временную SQLite-базу из команд ниже.
+- При локальном `TELEGRAM_BOT_TOKEN=local-disabled` backend может писать `Telegram API error 404` при настройке меню. Это ожидаемо и не мешает Mini App в браузере.
+- Если появляется `Python-dotenv could not parse statement starting at line 1`, но backend продолжает стартовать и `/api/services` отвечает `200`, для локального просмотра это не блокер.
+- Если Vite падает с `Error: spawn EPERM`, запустите `npm run dev` вне sandbox/ограниченной среды. Это ошибка запуска `esbuild`, а не проблема кода приложения.
+
 1. Если `backend/.venv` отсутствует, создать окружение и поставить зависимости:
 
 ```powershell
@@ -150,7 +168,9 @@ curl.exe -s -i http://localhost:5173
 - Не запускать Docker/PostgreSQL для обычного локального просмотра.
 - Не читать все файлы проекта, если задача только "запусти проект локально".
 - Не запускать тесты и сборку без отдельной просьбы.
+- Сначала проверить `backend/.venv`, `frontend/node_modules`, `runtime-config.js` и HTTP-ответы через `curl`, чтобы не делать лишнюю установку и не поднимать дубликаты процессов.
 - Ошибку Telegram Bot API при `TELEGRAM_BOT_TOKEN=local-disabled` можно игнорировать.
+- Предупреждение `Python-dotenv could not parse statement starting at line 1` не мешает локальному запуску, если нужные env-переменные заданы в текущей PowerShell-сессии.
 - Если Vite падает с `spawn EPERM`, перезапустить `npm run dev` вне sandbox.
 - Если `python -m venv .venv` падает на `ensurepip` из-за доступа к `C:\Temp`, повторить команду вне sandbox.
 

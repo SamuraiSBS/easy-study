@@ -1,4 +1,6 @@
+import { motion } from 'framer-motion';
 import { AtSign, Shield, UserRound } from 'lucide-react';
+import { AnimatedList, listItemVariants, springTransition } from '../components/Motion';
 import type { User } from '../types';
 
 type ProfilePageProps = {
@@ -16,34 +18,51 @@ function formatDate(value: string) {
 export function ProfilePage({ user }: ProfilePageProps) {
   if (!user) {
     return (
-      <section className="rounded-lg border border-app-line bg-app-surface p-5 shadow-soft">
+      <motion.section
+        className="app-card rounded-lg border border-app-line bg-app-surface p-5 shadow-soft"
+        initial={{ opacity: 0, y: 16, scale: 0.985 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={springTransition}
+      >
         <h1 className="text-2xl font-semibold">Профиль</h1>
         <p className="mt-2 text-sm leading-6 text-app-muted">Данные профиля появятся после авторизации через Telegram.</p>
-      </section>
+      </motion.section>
     );
   }
 
   const displayName = user.first_name || user.username || `ID ${user.telegram_id}`;
 
   return (
-    <div className="space-y-4">
-      <section className="rounded-lg border border-app-line bg-app-surface p-5 shadow-soft">
+    <AnimatedList className="space-y-4">
+      <motion.section className="app-card app-card-strong rounded-lg border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <div className="flex items-center gap-4">
           {user.photo_url ? (
-            <img className="h-16 w-16 rounded-md object-cover" src={user.photo_url} alt="" />
+            <motion.img
+              className="h-16 w-16 rounded-md object-cover"
+              src={user.photo_url}
+              alt=""
+              initial={{ scale: 0.88, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={springTransition}
+            />
           ) : (
-            <span className="flex h-16 w-16 items-center justify-center rounded-md bg-app-line text-app-accent">
+            <motion.span
+              className="app-soft-gradient flex h-16 w-16 items-center justify-center rounded-md text-app-accent"
+              initial={{ scale: 0.88, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={springTransition}
+            >
               <UserRound size={28} />
-            </span>
+            </motion.span>
           )}
           <div className="min-w-0">
             <h1 className="truncate text-2xl font-semibold">{displayName}</h1>
             <p className="mt-1 text-sm text-app-muted">Профиль Telegram</p>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="rounded-lg border border-app-line bg-app-surface p-5 shadow-soft">
+      <motion.section className="app-card rounded-lg border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <h2 className="text-sm font-semibold uppercase tracking-wide text-app-muted">Данные</h2>
         <dl className="mt-4 space-y-4 text-sm">
           <div className="flex items-start justify-between gap-4">
@@ -79,7 +98,7 @@ export function ProfilePage({ user }: ProfilePageProps) {
             <dd className="font-medium">{formatDate(user.created_at)}</dd>
           </div>
         </dl>
-      </section>
-    </div>
+      </motion.section>
+    </AnimatedList>
   );
 }

@@ -1,10 +1,14 @@
+import { motion } from 'framer-motion';
 import { ArrowLeft, Star } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
+import { AnimatedSection, springTransition } from '../components/Motion';
 import { Price } from '../components/Price';
 import { ErrorState, LoadingState } from '../components/State';
 import { StatusBadge } from '../components/StatusBadge';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
+
+const MotionLink = motion(Link);
 
 export function OrderDetailPage() {
   const orderId = Number(useParams().orderId);
@@ -19,10 +23,16 @@ export function OrderDetailPage() {
 
   return (
     <div className="space-y-4">
-      <Link to="/orders" className="inline-flex items-center gap-2 text-sm font-medium text-app-muted hover:text-app-text">
+      <MotionLink
+        to="/orders"
+        className="inline-flex items-center gap-2 text-sm font-medium text-app-muted hover:text-app-text"
+        whileHover={{ x: -2 }}
+        whileTap={{ scale: 0.97 }}
+        transition={springTransition}
+      >
         <ArrowLeft size={18} /> К заказам
-      </Link>
-      <section className="rounded-lg border border-app-line bg-app-surface p-5 shadow-soft">
+      </MotionLink>
+      <AnimatedSection className="app-card rounded-lg border border-app-line bg-app-surface p-5 shadow-soft">
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="text-sm text-app-muted">Заказ #{order.id}</div>
@@ -46,15 +56,17 @@ export function OrderDetailPage() {
           ) : null}
         </dl>
         {order.status === 'done' ? (
-          <Link
+          <MotionLink
             to={`/orders/${order.id}/review`}
-            className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-app-accent px-5 py-2 text-sm font-semibold text-app-accentText"
+            className="app-accent-gradient app-cta-once mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-5 py-2 text-sm font-semibold text-app-accentText"
+            whileHover={{ y: -2, scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            transition={springTransition}
           >
             <Star size={18} /> Оставить отзыв
-          </Link>
+          </MotionLink>
         ) : null}
-      </section>
+      </AnimatedSection>
     </div>
   );
 }
-

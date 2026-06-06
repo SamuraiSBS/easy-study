@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import { Navigate, Route, Routes, useLocation, useNavigationType } from 'react-router-dom';
 import { Layout } from './components/Layout';
+import { MotionProvider, PageTransition } from './components/Motion';
 import { ErrorState, LoadingState } from './components/State';
 import { useTelegram } from './hooks/useTelegram';
 import { AdminPage } from './pages/AdminPage';
@@ -16,6 +18,9 @@ import type { User } from './types';
 
 export function App() {
   useTelegram();
+  const location = useLocation();
+  const navigationType = useNavigationType();
+  const pageDirection = navigationType === 'POP' ? -1 : 1;
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,34 +43,42 @@ export function App() {
 
   if (loading) {
     return (
-      <Layout user={null}>
-        <LoadingState />
-      </Layout>
+      <MotionProvider>
+        <Layout user={null}>
+          <LoadingState />
+        </Layout>
+      </MotionProvider>
     );
   }
 
   if (error) {
     return (
-      <Layout user={null}>
-        <ErrorState message={error} onRetry={() => void loadUser()} />
-      </Layout>
+      <MotionProvider>
+        <Layout user={null}>
+          <ErrorState message={error} onRetry={() => void loadUser()} />
+        </Layout>
+      </MotionProvider>
     );
   }
 
   return (
-    <Layout user={user}>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/services/:serviceId" element={<ServicePage />} />
-        <Route path="/services/:serviceId/order" element={<OrderFormPage />} />
-        <Route path="/orders" element={<OrdersPage />} />
-        <Route path="/orders/:orderId" element={<OrderDetailPage />} />
-        <Route path="/orders/:orderId/review" element={<ReviewPage />} />
-        <Route path="/profile" element={<ProfilePage user={user} />} />
-        <Route path="/admin" element={user?.is_admin ? <AdminPage /> : <Navigate to="/" replace />} />
-        <Route path="/admin/orders/:orderId" element={user?.is_admin ? <AdminPage /> : <Navigate to="/" replace />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Layout>
+    <MotionProvider>
+      <Layout user={user}>
+        <AnimatePresence mode="wait" initial={false}>
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PageTransition direction={pageDirection}><HomePage /></PageTransition>} />
+            <Route path="/services/:serviceId" element={<PageTransition direction={pageDirection}><ServicePage /></PageTransition>} />
+            <Route path="/services/:serviceId/order" element={<PageTransition direction={pageDirection}><OrderFormPage /></PageTransition>} />
+            <Route path="/orders" element={<PageTransition direction={pageDirection}><OrdersPage /></PageTransition>} />
+            <Route path="/orders/:orderId" element={<PageTransition direction={pageDirection}><OrderDetailPage /></PageTransition>} />
+            <Route path="/orders/:orderId/review" element={<PageTransition direction={pageDirection}><ReviewPage /></PageTransition>} />
+            <Route path="/profile" element={<PageTransition direction={pageDirection}><ProfilePage user={user} /></PageTransition>} />
+            <Route path="/admin" element={user?.is_admin ? <PageTransition direction={pageDirection}><AdminPage /></PageTransition> : <Navigate to="/" replace />} />
+            <Route path="/admin/orders/:orderId" element={user?.is_admin ? <PageTransition direction={pageDirection}><AdminPage /></PageTransition> : <Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AnimatePresence>
+      </Layout>
+    </MotionProvider>
   );
 }

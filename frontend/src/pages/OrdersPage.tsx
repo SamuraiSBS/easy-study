@@ -1,16 +1,20 @@
+import { motion } from 'framer-motion';
 import { ArrowRight, MessageSquare, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { AnimatedList, AnimatedSection, listItemVariants, springTransition } from '../components/Motion';
 import { Price } from '../components/Price';
-import { EmptyState, ErrorState, LoadingState } from '../components/State';
+import { EmptyState, ErrorState, OrdersSkeleton } from '../components/State';
 import { StatusBadge } from '../components/StatusBadge';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
+
+const MotionLink = motion(Link);
 
 export function OrdersPage() {
   const { data, loading, error, reload } = useAsyncData(api.getMyOrders, []);
 
   if (loading) {
-    return <LoadingState />;
+    return <OrdersSkeleton />;
   }
   if (error) {
     return <ErrorState message={error} onRetry={reload} />;
@@ -19,14 +23,20 @@ export function OrdersPage() {
   const orders = data || [];
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Мои заявки</h1>
+      <AnimatedSection>
+        <h1 className="text-2xl font-semibold">Мои заявки</h1>
+      </AnimatedSection>
       {orders.length === 0 ? <EmptyState title="У вас пока нет заявок" /> : null}
-      <div className="space-y-3">
+      <AnimatedList className="space-y-3">
         {orders.map((order) => (
-          <Link
+          <MotionLink
             key={order.id}
             to={`/orders/${order.id}`}
-            className="block rounded-lg border border-app-line bg-app-surface p-4 shadow-soft transition hover:border-app-accent"
+            className="app-card group block rounded-lg border border-app-line bg-app-surface p-4 shadow-soft transition-colors hover:border-app-accent"
+            variants={listItemVariants}
+            whileHover={{ y: -3, scale: 1.01 }}
+            whileTap={{ scale: 0.98 }}
+            transition={springTransition}
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
@@ -40,7 +50,7 @@ export function OrdersPage() {
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
               {order.status === 'done' ? (
-                <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-1 text-emerald-800">
+                <span className="app-soft-gradient inline-flex items-center gap-1 rounded-md px-2 py-1 text-app-accent">
                   <Star size={15} /> Можно оставить отзыв
                 </span>
               ) : (
@@ -48,11 +58,11 @@ export function OrdersPage() {
                   <MessageSquare size={15} /> Админ свяжется в Telegram
                 </span>
               )}
-              <ArrowRight className="ml-auto text-app-muted" size={18} />
+              <ArrowRight className="ml-auto text-app-muted transition group-hover:translate-x-1 group-hover:text-app-accent" size={18} />
             </div>
-          </Link>
+          </MotionLink>
         ))}
-      </div>
+      </AnimatedList>
     </div>
   );
 }

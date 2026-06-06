@@ -5,22 +5,21 @@ export default {
     extend: {
       colors: {
         app: {
-          bg: 'var(--app-bg, #f6f7f4)',
-          surface: 'var(--app-surface, #ffffff)',
-          text: 'var(--app-text, #1f2933)',
-          muted: 'var(--app-muted, #64748b)',
-          line: 'var(--app-line, #dbe3dc)',
-          accent: 'var(--app-accent, #0f8b8d)',
+          bg: 'var(--app-bg, #eafbf3)',
+          surface: 'var(--app-surface, #f8fffb)',
+          text: 'var(--app-text, #0d2f1f)',
+          muted: 'var(--app-muted, #4d735f)',
+          line: 'var(--app-line, #b8f0d0)',
+          accent: 'var(--app-accent, #2ed67d)',
           accentText: 'var(--app-accent-text, #ffffff)',
-          warn: '#b7791f',
+          warn: '#0f8f4d',
           danger: '#b91c1c'
         }
       },
       boxShadow: {
-        soft: '0 10px 24px rgba(31, 41, 51, 0.08)'
+        soft: '0 12px 28px rgba(15, 143, 77, 0.1)'
       }
     }
   },
   plugins: []
 };
-
