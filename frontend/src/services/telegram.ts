@@ -19,13 +19,16 @@ export function getTelegramInitData() {
 
 export function applyTelegramTheme() {
   const root = document.documentElement;
-  root.style.setProperty('--app-bg', '#eafbf3');
+  root.style.setProperty('--app-bg', '#effbf5');
   root.style.setProperty('--app-surface', '#f8fffb');
-  root.style.setProperty('--app-text', '#0d2f1f');
-  root.style.setProperty('--app-muted', '#4d735f');
-  root.style.setProperty('--app-line', '#b8f0d0');
-  root.style.setProperty('--app-accent', '#2ed67d');
+  root.style.setProperty('--app-text', '#0b2f1d');
+  root.style.setProperty('--app-muted', '#35664d');
+  root.style.setProperty('--app-line', '#a7e3bf');
+  root.style.setProperty('--app-accent', '#24b26d');
   root.style.setProperty('--app-accent-text', '#ffffff');
+  root.style.setProperty('--app-accent-soft', '#d7f5e4');
+  root.style.setProperty('--app-accent-mid', '#1aa060');
+  root.style.setProperty('--app-accent-deep', '#12844f');
 }
 
 export function showBackButton(onClick: () => void) {

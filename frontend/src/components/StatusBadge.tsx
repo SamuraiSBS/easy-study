@@ -11,11 +11,11 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
 };
 
 const STATUS_CLASS: Record<OrderStatus, string> = {
-  new: 'bg-[#ecfff5] text-[#0f8f4d] border-[#b8f0d0]',
-  contacted: 'bg-[#d8fbe8] text-[#0c7f45] border-[#91e7b8]',
-  in_progress: 'bg-[#c2f6d9] text-[#096b3a] border-[#69de9f]',
-  done: 'bg-[#2ed67d] text-white border-[#2ed67d]',
-  cancelled: 'bg-[#f0fbf5] text-[#4d735f] border-[#cdeedc]'
+  new: 'bg-[#e9fbf1] text-[#1aa060] border-[#a7e3bf]',
+  contacted: 'bg-[#d7f5e4] text-[#188f57] border-[#8ad8ad]',
+  in_progress: 'bg-[#c3efd5] text-[#12844f] border-[#63c991]',
+  done: 'bg-[#24b26d] text-white border-[#24b26d]',
+  cancelled: 'bg-[#eef8f2] text-[#35664d] border-[#c4e7d2]'
 };
 
 function statusAnimation(status: OrderStatus) {
@@ -31,7 +31,7 @@ function statusAnimation(status: OrderStatus) {
       opacity: 1,
       y: 0,
       scale: [1, 1.1, 1],
-      boxShadow: ['0 0 0 rgba(46, 214, 125, 0)', '0 0 0 5px rgba(46, 214, 125, 0.18)', '0 0 0 rgba(46, 214, 125, 0)']
+      boxShadow: ['0 0 0 rgba(36, 178, 105, 0)', '0 0 0 5px rgba(36, 178, 105, 0.2)', '0 0 0 rgba(36, 178, 105, 0)']
     };
   }
   if (status === 'cancelled') {
