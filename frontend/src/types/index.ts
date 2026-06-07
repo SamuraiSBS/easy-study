@@ -24,6 +24,15 @@ export type Service = {
 
 export type OrderStatus = 'new' | 'contacted' | 'in_progress' | 'done' | 'cancelled';
 
+export type OrderAttachment = {
+  id: number;
+  order_id: number;
+  original_filename: string;
+  content_type: string | null;
+  size_bytes: number;
+  created_at: string;
+};
+
 export type Order = {
   id: number;
   user_id: number;
@@ -39,6 +48,7 @@ export type Order = {
   created_at: string;
   updated_at: string;
   completed_at: string | null;
+  attachments: OrderAttachment[];
 };
 
 export type AdminOrder = Order & {
@@ -60,4 +70,3 @@ export type AdminReview = Review & {
 };
 
 export type ServicePayload = Omit<Service, 'id' | 'created_at' | 'updated_at'>;
-

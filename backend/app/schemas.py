@@ -62,6 +62,17 @@ class OrderCreate(BaseModel):
     customer_comment: str = Field(default="", max_length=4000)
 
 
+class OrderAttachmentRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    order_id: int
+    original_filename: str
+    content_type: str | None
+    size_bytes: int
+    created_at: datetime
+
+
 class OrderRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -79,6 +90,7 @@ class OrderRead(BaseModel):
     created_at: datetime
     updated_at: datetime
     completed_at: datetime | None
+    attachments: list[OrderAttachmentRead] = []
 
 
 class AdminOrderRead(OrderRead):
@@ -117,4 +129,3 @@ class ReviewModerationUpdate(BaseModel):
 
 class OkResponse(BaseModel):
     ok: bool
-

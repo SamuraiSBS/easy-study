@@ -2,6 +2,8 @@ services:
   caddy:
     image: caddy:2.8-alpine
     restart: unless-stopped
+    volumes:
+      - api_uploads:/app/uploads
     depends_on:
       api:
         condition: service_healthy
@@ -55,6 +57,7 @@ services:
       retries: 20
 
 volumes:
+  api_uploads:
   caddy_data:
   caddy_config:
   postgres_data:

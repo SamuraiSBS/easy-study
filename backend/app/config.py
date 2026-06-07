@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     frontend_origins: str = ""
     auto_create_db: bool = False
     max_request_body_bytes: int = 1024 * 1024
+    upload_dir: str = "uploads"
     log_level: str = "INFO"
     telegram_polling_timeout_seconds: int = 25
 
@@ -37,4 +38,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-

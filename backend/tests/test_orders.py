@@ -1,3 +1,7 @@
+import shutil
+from pathlib import Path
+from uuid import uuid4
+
 from app.config import settings
 from app.models import Service, User
 from app.services.telegram_bot import telegram_bot
@@ -43,3 +47,71 @@ async def test_create_order_sends_admin_notification(client, session_factory, mo
     assert "Новая заявка" in messages[0]["text"]
     assert "Нужен доклад по истории" in messages[0]["text"]
 
+
+async def test_create_order_with_attachments(client, session_factory, monkeypatch):
+    upload_dir = Path(__file__).resolve().parents[1] / "pytest-cache-files-uploads" / uuid4().hex
+    monkeypatch.setattr(settings, "upload_dir", str(upload_dir))
+    async with session_factory() as db:
+        service = Service(
+            title="Презентация",
+            description="Подготовка презентации",
+            price_from=1200,
+            price_to=2500,
+            category="Работы",
+            is_active=True,
+            order_num=1,
+        )
+        db.add(service)
+        await db.commit()
+        await db.refresh(service)
+        service_id = service.id
+
+    monkeypatch.setattr(settings, "telegram_bot_token", "test-bot-token")
+    monkeypatch.setattr(telegram_bot, "send_message", lambda *args, **kwargs: {"ok": True})
+
+    try:
+        response = await client.post(
+            "/api/orders",
+            data={"service_id": str(service_id), "customer_comment": "Есть требования в файле"},
+            files=[
+                ("attachments", ("requirements.txt", b"deadline: monday", "text/plain")),
+                ("attachments", ("photo.jpg", b"fake-image", "image/jpeg")),
+            ],
+        )
+
+        assert response.status_code == 201
+        data = response.json()
+        assert len(data["attachments"]) == 2
+        assert data["attachments"][0]["original_filename"] == "requirements.txt"
+
+        attachment_id = data["attachments"][0]["id"]
+        download = await client.get(f"/api/orders/{data['id']}/attachments/{attachment_id}")
+        assert download.status_code == 200
+        assert download.content == b"deadline: monday"
+    finally:
+        shutil.rmtree(upload_dir, ignore_errors=True)
+
+
+async def test_create_order_rejects_more_than_five_attachments(client, session_factory):
+    async with session_factory() as db:
+        service = Service(
+            title="Реферат",
+            description="Подготовка реферата",
+            price_from=900,
+            price_to=None,
+            category="Работы",
+            is_active=True,
+            order_num=1,
+        )
+        db.add(service)
+        await db.commit()
+        await db.refresh(service)
+        service_id = service.id
+
+    response = await client.post(
+        "/api/orders",
+        data={"service_id": str(service_id), "customer_comment": ""},
+        files=[("attachments", (f"file-{index}.txt", b"x", "text/plain")) for index in range(6)],
+    )
+
+    assert response.status_code == 400

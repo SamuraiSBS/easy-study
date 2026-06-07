@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Send } from 'lucide-react';
+import { Paperclip, Send, X } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AnimatedButton, AnimatedList, listItemVariants, SuccessBurst } from '../components/Motion';
@@ -9,6 +9,8 @@ import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
 import { hapticSuccess } from '../services/telegram';
 
+const MAX_ATTACHMENTS = 5;
+
 export function OrderFormPage() {
   const navigate = useNavigate();
   const serviceId = Number(useParams().serviceId);
@@ -16,14 +18,35 @@ export function OrderFormPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [fileError, setFileError] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<File[]>([]);
   const { data: service, loading, error, reload } = useAsyncData(() => api.getService(serviceId), [serviceId]);
+
+  function addAttachments(files: FileList | null) {
+    if (!files?.length) {
+      return;
+    }
+    const nextAttachments = [...attachments, ...Array.from(files)];
+    if (nextAttachments.length > MAX_ATTACHMENTS) {
+      setFileError(`Можно прикрепить не больше ${MAX_ATTACHMENTS} файлов`);
+      setAttachments(nextAttachments.slice(0, MAX_ATTACHMENTS));
+      return;
+    }
+    setFileError(null);
+    setAttachments(nextAttachments);
+  }
+
+  function removeAttachment(index: number) {
+    setAttachments((current) => current.filter((_, itemIndex) => itemIndex !== index));
+    setFileError(null);
+  }
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setSubmitting(true);
     setSubmitError(null);
     try {
-      const order = await api.createOrder(serviceId, comment);
+      const order = await api.createOrder(serviceId, comment, attachments);
       hapticSuccess();
       setSubmitted(true);
       await new Promise((resolve) => setTimeout(resolve, 720));
@@ -69,6 +92,54 @@ export function OrderFormPage() {
           maxLength={4000}
         />
         <div className="mt-2 text-right text-sm text-app-muted">{comment.length}/4000</div>
+      </motion.section>
+
+      <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
+        <div className="flex items-center justify-between gap-3">
+          <label className="block text-base font-bold" htmlFor="order-attachments">
+            Фото или файлы
+          </label>
+          <span className="text-sm text-app-muted">{attachments.length}/{MAX_ATTACHMENTS}</span>
+        </div>
+        <label
+          className="mt-3 flex min-h-20 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-dashed border-app-line bg-white px-4 py-3 text-base font-semibold text-app-muted transition-colors hover:border-app-accent hover:text-app-text"
+          htmlFor="order-attachments"
+        >
+          <Paperclip size={18} /> Прикрепить
+        </label>
+        <input
+          id="order-attachments"
+          className="sr-only"
+          type="file"
+          multiple
+          accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt"
+          onChange={(event) => {
+            addAttachments(event.target.files);
+            event.target.value = '';
+          }}
+          disabled={attachments.length >= MAX_ATTACHMENTS}
+        />
+        {attachments.length ? (
+          <div className="mt-3 space-y-2">
+            {attachments.map((attachment, index) => (
+              <div key={`${attachment.name}-${attachment.lastModified}-${index}`} className="flex items-center justify-between gap-3 rounded-2xl border border-app-line bg-white px-3 py-2">
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-medium">{attachment.name}</div>
+                  <div className="text-xs text-app-muted">{(attachment.size / 1024 / 1024).toFixed(1)} МБ</div>
+                </div>
+                <AnimatedButton
+                  type="button"
+                  className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-app-line text-app-muted"
+                  onClick={() => removeAttachment(index)}
+                  title="Убрать файл"
+                >
+                  <X size={15} />
+                </AnimatedButton>
+              </div>
+            ))}
+          </div>
+        ) : null}
+        {fileError ? <div className="mt-2 text-sm font-medium text-red-600">{fileError}</div> : null}
       </motion.section>
 
       {submitError ? <ErrorState message={submitError} /> : null}

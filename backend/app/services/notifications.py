@@ -35,7 +35,7 @@ async def notify_admins_about_new_order(db: AsyncSession, order_id: int) -> int:
         return 0
 
     order_result = await db.execute(
-        select(Order).options(selectinload(Order.user)).where(Order.id == order_id)
+        select(Order).options(selectinload(Order.user), selectinload(Order.attachments)).where(Order.id == order_id)
     )
     order = order_result.scalar_one_or_none()
     if order is None:
@@ -51,7 +51,8 @@ async def notify_admins_about_new_order(db: AsyncSession, order_id: int) -> int:
         f"Услуга: {order.title_snapshot}\n"
         f"Цена: {price_label(order.price_from_snapshot, order.price_to_snapshot)}\n"
         f"Клиент: {user_label(order.user)}\n"
-        f"Telegram ID: {order.user.telegram_id}\n\n"
+        f"Telegram ID: {order.user.telegram_id}\n"
+        f"Вложений: {len(order.attachments)}\n\n"
         f"Комментарий:\n{order.customer_comment or 'Без комментария'}"
     )
     reply_markup = {
@@ -94,4 +95,3 @@ async def notify_user_review_request(db: AsyncSession, order_id: int) -> bool:
         logger.exception("Failed to send review request for order %s", order.id)
         return False
     return True
-

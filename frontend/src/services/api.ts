@@ -2,6 +2,7 @@ import type {
   AdminOrder,
   AdminReview,
   Order,
+  OrderAttachment,
   OrderStatus,
   Review,
   Service,
@@ -58,17 +59,48 @@ async function request<T>(path: string, options?: RequestInit, config: RequestCo
   return response.json() as Promise<T>;
 }
 
+async function downloadRequest(path: string, filename: string): Promise<void> {
+  const headers = new Headers();
+  const initData = getTelegramInitData();
+  if (initData) {
+    headers.set('Authorization', `Telegram ${initData}`);
+  }
+
+  const response = await fetch(`${API_URL}${path}`, { headers });
+  if (!response.ok) {
+    const errorPayload = await response.json().catch(() => ({ detail: 'Ошибка сервера' }));
+    throw new Error(getErrorMessage(errorPayload.detail) || 'Ошибка сервера');
+  }
+
+  const blob = await response.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = objectUrl;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+}
+
 export const api = {
   getMe: () => request<User>('/auth/me'),
   getServices: () => request<Service[]>('/services'),
   getService: (serviceId: number) => request<Service>(`/services/${serviceId}`),
-  createOrder: (serviceId: number, customerComment: string) =>
-    request<Order>('/orders', {
+  createOrder: (serviceId: number, customerComment: string, attachments: File[] = []) => {
+    const formData = new FormData();
+    formData.append('service_id', String(serviceId));
+    formData.append('customer_comment', customerComment);
+    attachments.forEach((attachment) => formData.append('attachments', attachment));
+    return request<Order>('/orders', {
       method: 'POST',
-      body: JSON.stringify({ service_id: serviceId, customer_comment: customerComment })
-    }),
+      body: formData
+    });
+  },
   getMyOrders: () => request<Order[]>('/orders/my'),
   getOrder: (orderId: number) => request<Order>(`/orders/${orderId}`),
+  downloadOrderAttachment: (orderId: number, attachment: OrderAttachment) =>
+    downloadRequest(`/orders/${orderId}/attachments/${attachment.id}`, attachment.original_filename),
   createReview: (orderId: number, rating: number, text: string) =>
     request<Review>(`/orders/${orderId}/review`, {
       method: 'POST',
@@ -109,4 +141,3 @@ export const api = {
     getUsers: () => request<User[]>('/admin/users')
   }
 };
-

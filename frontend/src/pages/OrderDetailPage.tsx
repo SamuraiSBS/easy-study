@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowLeft, Star } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
+import { AttachmentList } from '../components/AttachmentList';
 import { AnimatedSection, springTransition } from '../components/Motion';
 import { Price } from '../components/Price';
 import { ErrorState, LoadingState } from '../components/State';
@@ -52,6 +53,14 @@ export function OrderDetailPage() {
             <div>
               <dt className="font-bold">Комментарий администратора</dt>
               <dd className="mt-1 whitespace-pre-line text-app-muted">{order.admin_comment}</dd>
+            </div>
+          ) : null}
+          {order.attachments.length ? (
+            <div>
+              <dt className="font-bold">Вложения</dt>
+              <dd className="mt-2">
+                <AttachmentList orderId={order.id} attachments={order.attachments} />
+              </dd>
             </div>
           ) : null}
         </dl>

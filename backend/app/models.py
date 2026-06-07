@@ -65,6 +65,24 @@ class Order(Base, TimestampMixin):
     user: Mapped[User] = relationship(back_populates="orders")
     service: Mapped[Service | None] = relationship(back_populates="orders")
     reviews: Mapped[list["Review"]] = relationship(back_populates="order")
+    attachments: Mapped[list["OrderAttachment"]] = relationship(
+        back_populates="order",
+        cascade="all, delete-orphan",
+    )
+
+
+class OrderAttachment(Base):
+    __tablename__ = "order_attachments"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    order_id: Mapped[int] = mapped_column(ForeignKey("orders.id", ondelete="CASCADE"), index=True)
+    original_filename: Mapped[str] = mapped_column(String(255))
+    stored_filename: Mapped[str] = mapped_column(String(255))
+    content_type: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    size_bytes: Mapped[int] = mapped_column(Integer)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, index=True)
+
+    order: Mapped[Order] = relationship(back_populates="attachments")
 
 
 class Review(Base):
@@ -80,4 +98,3 @@ class Review(Base):
 
     user: Mapped[User] = relationship(back_populates="reviews")
     order: Mapped[Order | None] = relationship(back_populates="reviews")
-

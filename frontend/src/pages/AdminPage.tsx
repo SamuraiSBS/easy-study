@@ -2,6 +2,7 @@ import { LayoutGroup, motion } from 'framer-motion';
 import { Check, Filter, Plus, Save, Trash2 } from 'lucide-react';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { AttachmentList } from '../components/AttachmentList';
 import { AnimatedButton, AnimatedList, AnimatedSection, listItemVariants, springTransition } from '../components/Motion';
 import { Price } from '../components/Price';
 import { EmptyState, ErrorState, LoadingState } from '../components/State';
@@ -158,6 +159,14 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
               <div className="font-semibold">Комментарий клиента</div>
               <div className="mt-1 whitespace-pre-line text-app-muted">{selected.customer_comment || 'Без комментария'}</div>
             </div>
+            {selected.attachments.length ? (
+              <div className="text-sm">
+                <div className="font-semibold">Вложения</div>
+                <div className="mt-2">
+                  <AttachmentList orderId={selected.id} attachments={selected.attachments} />
+                </div>
+              </div>
+            ) : null}
             <label className="block text-sm font-semibold">
               Статус
               <select
