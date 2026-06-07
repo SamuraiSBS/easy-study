@@ -24,8 +24,8 @@ export function ProfilePage({ user }: ProfilePageProps) {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={springTransition}
       >
-        <h1 className="text-2xl font-semibold">Профиль</h1>
-        <p className="mt-2 text-sm leading-6 text-app-muted">Данные профиля появятся после авторизации через Telegram.</p>
+        <h1 className="text-3xl font-bold leading-tight">Профиль</h1>
+        <p className="mt-3 text-base leading-7 text-app-muted">Данные профиля появятся после авторизации через Telegram.</p>
       </motion.section>
     );
   }
@@ -56,22 +56,22 @@ export function ProfilePage({ user }: ProfilePageProps) {
             </motion.span>
           )}
           <div className="min-w-0">
-            <h1 className="truncate text-2xl font-semibold">{displayName}</h1>
-            <p className="mt-1 text-sm text-app-muted">Профиль Telegram</p>
+            <h1 className="truncate text-3xl font-bold leading-tight">{displayName}</h1>
+            <p className="mt-1 text-base text-app-muted">Профиль Telegram</p>
           </div>
         </div>
       </motion.section>
 
       <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-app-muted">Данные</h2>
-        <dl className="mt-4 space-y-4 text-sm">
-          <div className="flex items-start justify-between gap-4">
+        <h2 className="text-lg font-bold leading-tight text-app-text">Данные</h2>
+        <dl className="mt-4 space-y-4 text-base leading-7">
+          <div className="grid gap-1 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-3">
             <dt className="text-app-muted">Telegram ID</dt>
-            <dd className="font-medium">{user.telegram_id}</dd>
+            <dd className="font-bold sm:text-right">{user.telegram_id}</dd>
           </div>
-          <div className="flex items-start justify-between gap-4">
+          <div className="grid gap-1 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-3">
             <dt className="text-app-muted">Username</dt>
-            <dd className="inline-flex items-center gap-1 font-medium">
+            <dd className="inline-flex items-center gap-1 font-bold sm:justify-end sm:text-right">
               {user.username ? (
                 <>
                   <AtSign size={15} /> {user.username}
@@ -81,9 +81,9 @@ export function ProfilePage({ user }: ProfilePageProps) {
               )}
             </dd>
           </div>
-          <div className="flex items-start justify-between gap-4">
+          <div className="grid gap-1 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-3">
             <dt className="text-app-muted">Роль</dt>
-            <dd className="inline-flex items-center gap-1 font-medium">
+            <dd className="inline-flex items-center gap-1 font-bold sm:justify-end sm:text-right">
               {user.is_admin ? (
                 <>
                   <Shield size={15} /> Администратор
@@ -93,9 +93,9 @@ export function ProfilePage({ user }: ProfilePageProps) {
               )}
             </dd>
           </div>
-          <div className="flex items-start justify-between gap-4">
+          <div className="grid gap-1 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-3">
             <dt className="text-app-muted">В приложении с</dt>
-            <dd className="font-medium">{formatDate(user.created_at)}</dd>
+            <dd className="whitespace-nowrap font-bold sm:text-right">{formatDate(user.created_at)}</dd>
           </div>
         </dl>
       </motion.section>

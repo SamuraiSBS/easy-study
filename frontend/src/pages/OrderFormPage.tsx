@@ -49,33 +49,33 @@ export function OrderFormPage() {
   return (
     <AnimatedList className="space-y-4" as="form" onSubmit={handleSubmit}>
       <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
-        <div className="text-sm text-app-muted">Заявка на услугу</div>
-        <h1 className="mt-1 text-xl font-semibold">{service.title}</h1>
-        <div className="mt-3 text-sm font-semibold text-app-accent">
+        <div className="text-base text-app-muted">Заявка на услугу</div>
+        <h1 className="mt-1 text-xl font-bold leading-tight">{service.title}</h1>
+        <div className="mt-3 text-base font-bold text-app-accent">
           <Price priceFrom={service.price_from} priceTo={service.price_to} />
         </div>
       </motion.section>
 
       <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
-        <label className="block text-sm font-semibold" htmlFor="customer-comment">
+        <label className="block text-base font-bold" htmlFor="customer-comment">
           Комментарий
         </label>
         <textarea
           id="customer-comment"
-          className="mt-3 min-h-40 w-full resize-y rounded-2xl border border-app-line bg-white px-3 py-3 text-sm outline-none transition-colors focus:border-app-accent"
+          className="mt-3 min-h-40 w-full resize-y rounded-2xl border border-app-line bg-white px-4 py-3 text-base leading-7 outline-none transition-colors focus:border-app-accent"
           value={comment}
           onChange={(event) => setComment(event.target.value)}
           placeholder="Тема, срок, требования, объем, пожелания"
           maxLength={4000}
         />
-        <div className="mt-2 text-right text-xs text-app-muted">{comment.length}/4000</div>
+        <div className="mt-2 text-right text-sm text-app-muted">{comment.length}/4000</div>
       </motion.section>
 
       {submitError ? <ErrorState message={submitError} /> : null}
 
       <AnimatedButton
         type="submit"
-        className="app-accent-gradient app-cta-once inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-app-accentText disabled:opacity-60"
+        className="app-accent-gradient app-cta-once inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText disabled:opacity-60"
         disabled={submitting}
       >
         <Send size={18} /> {submitting ? 'Отправка' : 'Подтвердить заявку'}

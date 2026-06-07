@@ -24,7 +24,7 @@ export function OrdersPage() {
   return (
     <div className="space-y-4">
       <AnimatedSection>
-        <h1 className="text-2xl font-semibold">Мои заявки</h1>
+        <h1 className="text-3xl font-bold leading-tight">Мои заявки</h1>
       </AnimatedSection>
       {orders.length === 0 ? <EmptyState title="У вас пока нет заявок" /> : null}
       <AnimatedList className="space-y-3">
@@ -40,15 +40,15 @@ export function OrdersPage() {
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <div className="text-sm text-app-muted">#{order.id}</div>
-                <h2 className="mt-1 font-semibold">{order.title_snapshot}</h2>
+                <div className="text-base text-app-muted">#{order.id}</div>
+                <h2 className="mt-1 text-lg font-bold leading-snug">{order.title_snapshot}</h2>
               </div>
               <StatusBadge status={order.status} />
             </div>
-            <div className="mt-3 text-sm text-app-muted">
+            <div className="mt-3 text-base text-app-muted">
               <Price priceFrom={order.price_from_snapshot} priceTo={order.price_to_snapshot} />
             </div>
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-base">
               {order.status === 'done' ? (
                 <span className="app-soft-gradient inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-app-accent">
                   <Star size={15} /> Можно оставить отзыв

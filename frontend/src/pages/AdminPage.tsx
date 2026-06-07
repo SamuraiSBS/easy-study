@@ -444,7 +444,7 @@ export function AdminPage() {
   return (
     <div className="space-y-4">
       <AnimatedSection className="flex items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold">Админка</h1>
+        <h1 className="text-3xl font-bold leading-tight">Админка</h1>
         {orderId ? (
           <Link className="rounded-full border border-app-line px-3 py-2 text-sm" to="/admin">
             Все заказы

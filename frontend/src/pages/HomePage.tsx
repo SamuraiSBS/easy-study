@@ -34,8 +34,8 @@ export function HomePage() {
   return (
     <div className="space-y-5">
       <AnimatedSection className="app-card app-card-strong rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft">
-        <h1 className="text-2xl font-semibold leading-tight">Выберите учебную работу</h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-app-muted">
+        <h1 className="text-3xl font-bold leading-tight">Выберите учебную работу</h1>
+        <p className="mt-3 max-w-2xl text-base leading-7 text-app-muted">
           Оставьте заявку с комментарием, и администратор напишет вам в Telegram для деталей.
         </p>
       </AnimatedSection>
@@ -44,7 +44,7 @@ export function HomePage() {
 
       {Object.entries(grouped).map(([category, categoryServices], categoryIndex) => (
         <AnimatedSection key={category} className="space-y-3" delay={categoryIndex * 0.04}>
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-app-muted">{category}</h2>
+          <h2 className="text-lg font-bold leading-tight text-app-text">{category}</h2>
           <AnimatedList className="grid gap-3 md:grid-cols-2">
             {categoryServices.map((service) => (
               <MotionLink
@@ -66,11 +66,11 @@ export function HomePage() {
                   </motion.span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
-                      <h3 className="font-semibold leading-tight">{service.title}</h3>
+                      <h3 className="text-lg font-bold leading-snug">{service.title}</h3>
                       <ArrowRight className="shrink-0 text-app-muted transition group-hover:translate-x-1 group-hover:text-app-accent" size={18} />
                     </div>
-                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-app-muted">{service.description}</p>
-                    <div className="mt-3 text-sm font-semibold text-app-accent">
+                    <p className="mt-2 line-clamp-2 text-base leading-7 text-app-muted">{service.description}</p>
+                    <div className="mt-3 text-base font-bold text-app-accent">
                       <Price priceFrom={service.price_from} priceTo={service.price_to} />
                     </div>
                   </div>

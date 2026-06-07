@@ -12,7 +12,7 @@ type LayoutProps = {
 
 function navClass(isActive: boolean) {
   return [
-    'relative flex min-h-12 flex-1 overflow-hidden rounded-full px-2 text-xs font-medium transition-colors',
+    'relative flex min-h-12 flex-1 overflow-hidden rounded-full px-2 text-[13px] font-semibold transition-colors',
     isActive ? 'text-app-accentText' : 'text-app-muted hover:bg-white/60 hover:text-app-text'
   ].join(' ');
 }
@@ -45,13 +45,13 @@ export function Layout({ user, children }: LayoutProps) {
                 ES
               </span>
               <span>
-                <span className="block text-base font-semibold leading-tight">Easy Study</span>
-                <span className="block text-xs text-app-muted">Учебные работы</span>
+                <span className="block text-lg font-bold leading-tight">Easy Study</span>
+                <span className="block text-sm text-app-muted">Учебные работы</span>
               </span>
             </Link>
           </motion.div>
           {user ? (
-            <div className="min-w-0 text-right text-xs text-app-muted">
+            <div className="min-w-0 text-right text-sm text-app-muted">
               <div className="truncate">{user.first_name || user.username || `ID ${user.telegram_id}`}</div>
               {user.is_admin ? <div className="font-medium text-app-accent">admin</div> : null}
             </div>

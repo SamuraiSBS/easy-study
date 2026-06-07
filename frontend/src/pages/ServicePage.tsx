@@ -25,7 +25,7 @@ export function ServicePage() {
     <div className="space-y-4">
       <MotionLink
         to="/"
-        className="inline-flex items-center gap-2 text-sm font-medium text-app-muted hover:text-app-text"
+        className="inline-flex items-center gap-2 text-base font-semibold text-app-muted hover:text-app-text"
         whileHover={{ x: -2 }}
         whileTap={{ scale: 0.97 }}
         transition={springTransition}
@@ -33,15 +33,15 @@ export function ServicePage() {
         <ArrowLeft size={18} /> Назад
       </MotionLink>
       <AnimatedSection className="app-card app-card-strong rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft">
-        <div className="text-sm font-medium text-app-accent">{service.category}</div>
-        <h1 className="mt-2 text-2xl font-semibold leading-tight">{service.title}</h1>
-        <p className="mt-4 whitespace-pre-line text-sm leading-6 text-app-muted">{service.description}</p>
-        <div className="mt-5 text-lg font-semibold">
+        <div className="text-base font-semibold text-app-accent">{service.category}</div>
+        <h1 className="mt-2 text-3xl font-bold leading-tight">{service.title}</h1>
+        <p className="mt-4 whitespace-pre-line text-base leading-7 text-app-muted">{service.description}</p>
+        <div className="mt-5 text-xl font-bold">
           <Price priceFrom={service.price_from} priceTo={service.price_to} />
         </div>
         <MotionLink
           to={`/services/${service.id}/order`}
-          className="app-accent-gradient app-cta-once mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-semibold text-app-accentText"
+          className="app-accent-gradient app-cta-once mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText"
           whileHover={{ y: -2, scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
           transition={springTransition}

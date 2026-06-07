@@ -97,7 +97,7 @@ export function SuccessBurst({ title }: { title: string }) {
         ✓
       </motion.div>
       <motion.div
-        className="mt-4 text-lg font-semibold"
+        className="mt-4 text-xl font-bold"
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ ...smoothTransition, delay: 0.14 }}
