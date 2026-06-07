@@ -116,38 +116,13 @@ window.__EASY_STUDY_CONFIG__ = {
 };
 ```
 
-4. Подготовить локальную SQLite-базу:
+4. Запустить backend в фоне через скрипт. Он сам подготовит локальную SQLite-базу, задаст `DEV_TELEGRAM_USER_ID=123456789`, проверит `/api/services` и завершит команду:
 
 ```powershell
-cd backend
-$db = Join-Path $env:TEMP 'easy_study_runtime.sqlite3'
-$env:DATABASE_URL = 'sqlite+aiosqlite:///' + $db.Replace('\', '/')
-$env:AUTO_CREATE_DB = 'true'
-$env:DEV_TELEGRAM_USER_ID = '123456789'
-$env:TELEGRAM_BOT_TOKEN = 'local-disabled'
-$env:FRONTEND_ORIGIN = 'http://localhost:5173'
-$env:FRONTEND_ORIGINS = 'http://localhost:5173'
-
-.venv\Scripts\python.exe -c "import asyncio; import app.models; from app.database import create_db; asyncio.run(create_db())"
-.venv\Scripts\python.exe -m app.seed_data
-cd ..
+.\scripts\start-local-backend.ps1
 ```
 
-5. Запустить backend и frontend:
-
-```powershell
-cd backend
-$db = Join-Path $env:TEMP 'easy_study_runtime.sqlite3'
-$env:DATABASE_URL = 'sqlite+aiosqlite:///' + $db.Replace('\', '/')
-$env:AUTO_CREATE_DB = 'true'
-$env:DEV_TELEGRAM_USER_ID = '123456789'
-$env:TELEGRAM_BOT_TOKEN = 'local-disabled'
-$env:FRONTEND_ORIGIN = 'http://localhost:5173'
-$env:FRONTEND_ORIGINS = 'http://localhost:5173'
-.venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
-
-Во втором терминале:
+5. Запустить frontend:
 
 ```powershell
 cd frontend
@@ -186,23 +161,10 @@ cd ..\frontend
 npm install
 ```
 
-Backend, терминал 1:
+Backend:
 
 ```powershell
-cd backend
-.venv\Scripts\activate
-
-$db = Join-Path $env:TEMP 'easy_study_runtime.sqlite3'
-$env:DATABASE_URL = 'sqlite+aiosqlite:///' + $db.Replace('\', '/')
-$env:AUTO_CREATE_DB = 'true'
-$env:DEV_TELEGRAM_USER_ID = '123456789'
-$env:TELEGRAM_BOT_TOKEN = 'local-disabled'
-$env:FRONTEND_ORIGIN = 'http://localhost:5173'
-$env:FRONTEND_ORIGINS = 'http://localhost:5173'
-
-python -c "import asyncio; import app.models; from app.database import create_db; asyncio.run(create_db())"
-python -m app.seed_data
-python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+.\scripts\start-local-backend.ps1
 ```
 
 `TELEGRAM_BOT_TOKEN=local-disabled` нужен, чтобы локальный запуск не использовал реальный токен из `.env`. Ошибку Telegram Bot API при старте можно игнорировать: на работу Mini App в браузере она не влияет.

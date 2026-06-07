@@ -7,8 +7,9 @@ export function useTelegram() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    initTelegram();
+    const cleanup = initTelegram();
     applyTelegramTheme();
+    return cleanup;
   }, []);
 
   useEffect(() => {
@@ -25,4 +26,3 @@ export function useTelegram() {
     });
   }, [location.pathname, navigate]);
 }
-

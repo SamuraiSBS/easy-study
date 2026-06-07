@@ -36,9 +36,9 @@ export function Layout({ user, children }: LayoutProps) {
   ];
 
   return (
-    <div className="app-page-gradient min-h-screen text-app-text">
+    <div className="app-page-gradient app-viewport-shell text-app-text">
       <header className="app-shell-gradient sticky top-0 z-20 border-b border-app-line backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+        <div className="app-safe-x mx-auto flex w-full items-center justify-between py-3">
           <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} transition={springTransition}>
             <Link to="/" className="flex items-center gap-3">
               <span className="app-accent-gradient flex h-9 w-9 items-center justify-center rounded-2xl text-sm font-bold text-app-accentText">
@@ -58,10 +58,12 @@ export function Layout({ user, children }: LayoutProps) {
           ) : null}
         </div>
       </header>
-      <main className="mx-auto max-w-5xl px-4 py-5 pb-24">{children}</main>
-      <nav className="app-bottom-gradient fixed inset-x-0 bottom-0 z-30 border-t border-app-line pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur">
+      <main className="app-safe-x mx-auto w-full py-5 pb-[calc(6.25rem+var(--tg-safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))]">
+        {children}
+      </main>
+      <nav className="app-bottom-gradient fixed inset-x-0 bottom-0 z-30 border-t border-app-line pb-[max(0.75rem,var(--tg-safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))] pt-2 backdrop-blur">
         <LayoutGroup id="bottom-navigation">
-          <div className="mx-auto flex max-w-5xl gap-2 px-4">
+          <div className="app-safe-x mx-auto flex w-full gap-2">
             <div className="flex w-full gap-2 rounded-full border border-app-line bg-white/55 p-1 shadow-soft backdrop-blur">
               {navItems.map((item) => {
                 const isActive = isActiveRoute(location.pathname, item.path);

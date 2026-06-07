@@ -16,6 +16,8 @@
   --app-radius-card: 1.75rem;
   --app-radius-control: 1.125rem;
   --app-radius-pill: 999px;
+  --app-viewport-height: var(--tg-viewport-height, 100vh);
+  --app-viewport-stable-height: var(--tg-viewport-stable-height, 100vh);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -28,16 +30,20 @@ body,
 #root {
   width: 100%;
   max-width: 100%;
+  height: 100%;
   overflow-x: hidden;
 }
 
 body {
   margin: 0;
   min-width: 320px;
+  min-height: 100dvh;
+  min-height: var(--app-viewport-height);
   background:
     linear-gradient(150deg, rgba(219, 247, 231, 0.98) 0%, rgba(235, 252, 242, 0.96) 34%, rgba(202, 239, 218, 0.92) 72%, rgba(225, 249, 235, 0.96) 100%),
     var(--app-bg);
   color: var(--app-text);
+  overscroll-behavior: none;
 }
 
 button,
@@ -92,10 +98,28 @@ button:disabled {
     var(--app-bg);
 }
 
+.app-viewport-shell {
+  height: 100dvh;
+  height: var(--app-viewport-height);
+  min-height: 100dvh;
+  min-height: var(--app-viewport-height);
+  overflow-y: auto;
+  padding-left: var(--tg-safe-area-inset-left, env(safe-area-inset-left, 0px));
+  padding-right: var(--tg-safe-area-inset-right, env(safe-area-inset-right, 0px));
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-safe-x {
+  padding-left: max(1rem, var(--tg-content-safe-area-inset-left, env(safe-area-inset-left, 0px)));
+  padding-right: max(1rem, var(--tg-content-safe-area-inset-right, env(safe-area-inset-right, 0px)));
+}
+
 .app-shell-gradient {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(234, 250, 241, 0.68));
   box-shadow: 0 8px 28px rgba(18, 132, 79, 0.08);
+  padding-top: var(--tg-content-safe-area-inset-top, env(safe-area-inset-top, 0px));
 }
 
 .app-bottom-gradient {
