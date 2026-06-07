@@ -1,6 +1,6 @@
 import { LayoutGroup, motion } from 'framer-motion';
 import { ClipboardList, Home, Shield, UserRound } from 'lucide-react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import type { User } from '../types';
 import { springTransition } from './Motion';
@@ -12,7 +12,7 @@ type LayoutProps = {
 
 function navClass(isActive: boolean) {
   return [
-    'relative flex min-h-12 flex-1 overflow-hidden rounded-full px-2 text-[13px] font-semibold transition-colors',
+    'relative flex h-12 flex-1 items-center justify-center overflow-hidden rounded-full px-2 transition-colors',
     isActive ? 'text-app-accentText' : 'text-app-muted hover:bg-white/60 hover:text-app-text'
   ].join(' ');
 }
@@ -37,27 +37,6 @@ export function Layout({ user, children }: LayoutProps) {
 
   return (
     <div className="app-page-gradient app-viewport-shell text-app-text">
-      <header className="app-shell-gradient sticky top-0 z-20 border-b border-app-line backdrop-blur">
-        <div className="app-safe-x mx-auto flex w-full items-center justify-between py-3">
-          <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} transition={springTransition}>
-            <Link to="/" className="flex items-center gap-3">
-              <span className="app-accent-gradient flex h-9 w-9 items-center justify-center rounded-2xl text-sm font-bold text-app-accentText">
-                ES
-              </span>
-              <span>
-                <span className="block text-lg font-bold leading-tight">Easy Study</span>
-                <span className="block text-sm text-app-muted">Учебные работы</span>
-              </span>
-            </Link>
-          </motion.div>
-          {user ? (
-            <div className="min-w-0 text-right text-sm text-app-muted">
-              <div className="truncate">{user.first_name || user.username || `ID ${user.telegram_id}`}</div>
-              {user.is_admin ? <div className="font-medium text-app-accent">admin</div> : null}
-            </div>
-          ) : null}
-        </div>
-      </header>
       <main className="app-safe-x mx-auto w-full py-5 pb-[calc(6.25rem+var(--tg-safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))]">
         {children}
       </main>
@@ -74,6 +53,7 @@ export function Layout({ user, children }: LayoutProps) {
                     key={item.path}
                     type="button"
                     className={navClass(isActive)}
+                    aria-label={item.label}
                     aria-current={isActive ? 'page' : undefined}
                     onClick={() => navigate(item.path)}
                     whileTap={{ scale: 0.96 }}
@@ -86,11 +66,10 @@ export function Layout({ user, children }: LayoutProps) {
                         transition={springTransition}
                       />
                     ) : null}
-                    <span className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-1">
-                      <motion.span animate={{ y: isActive ? -2 : 0, scale: isActive ? 1.08 : 1 }} transition={springTransition}>
-                        <Icon size={20} />
+                    <span className="relative z-10 flex h-full w-full items-center justify-center">
+                      <motion.span animate={{ scale: isActive ? 1.12 : 1 }} transition={springTransition}>
+                        <Icon className="h-7 w-7" strokeWidth={2.2} aria-hidden="true" />
                       </motion.span>
-                      {item.label}
                     </span>
                   </motion.button>
                 );
