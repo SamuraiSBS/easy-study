@@ -15,12 +15,14 @@ export function ReviewPage() {
   const [text, setText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [duplicateReview, setDuplicateReview] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const { data: order, loading, error, reload } = useAsyncData(() => api.getOrder(orderId), [orderId]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     setSubmitting(true);
+    setDuplicateReview(false);
     setSubmitError(null);
     try {
       await api.createReview(orderId, rating, text);
@@ -29,7 +31,13 @@ export function ReviewPage() {
       await new Promise((resolve) => setTimeout(resolve, 720));
       navigate('/orders');
     } catch (errorValue) {
-      setSubmitError(errorValue instanceof Error ? errorValue.message : 'Не удалось отправить отзыв');
+      const message = errorValue instanceof Error ? errorValue.message : 'Не удалось отправить отзыв';
+      if (message === 'Review already exists') {
+        setDuplicateReview(true);
+        await reload();
+        return;
+      }
+      setSubmitError(message);
     } finally {
       setSubmitting(false);
     }
@@ -44,6 +52,33 @@ export function ReviewPage() {
 
   if (submitted) {
     return <SuccessBurst title="Отзыв отправлен" />;
+  }
+
+  if (order.review || duplicateReview) {
+    return (
+      <AnimatedList className="space-y-4">
+        <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
+          <div className="text-base text-app-muted">Отзыв к заказу #{order.id}</div>
+          <h1 className="mt-1 text-xl font-bold leading-tight">{order.title_snapshot}</h1>
+          <div className="mt-5 rounded-2xl border border-app-line bg-app-bg p-4">
+            {order.review ? (
+              <>
+                <div className="flex items-center gap-2 text-base font-bold text-app-text">
+                  <Star size={18} fill="currentColor" className="text-app-accent" />
+                  Отзыв оставлен: {order.review.rating}/5
+                </div>
+                <p className="mt-3 whitespace-pre-line text-base leading-7 text-app-muted">{order.review.text}</p>
+              </>
+            ) : (
+              <div className="flex items-center gap-2 text-base font-bold text-app-text">
+                <Star size={18} fill="currentColor" className="text-app-accent" />
+                Отзыв уже оставлен
+              </div>
+            )}
+          </div>
+        </motion.section>
+      </AnimatedList>
+    );
   }
 
   return (

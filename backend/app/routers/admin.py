@@ -26,7 +26,9 @@ router = APIRouter(prefix="/admin", tags=["admin"])
 
 async def admin_order_or_404(db: AsyncSession, order_id: int) -> Order:
     result = await db.execute(
-        select(Order).options(selectinload(Order.user), selectinload(Order.attachments)).where(Order.id == order_id)
+        select(Order)
+        .options(selectinload(Order.user), selectinload(Order.attachments), selectinload(Order.reviews))
+        .where(Order.id == order_id)
     )
     order = result.scalar_one_or_none()
     if order is None:
@@ -48,7 +50,11 @@ async def list_orders(
     _: User = Depends(require_admin),
     db: AsyncSession = Depends(get_session),
 ):
-    query = select(Order).options(selectinload(Order.user), selectinload(Order.attachments)).order_by(Order.created_at.desc())
+    query = (
+        select(Order)
+        .options(selectinload(Order.user), selectinload(Order.attachments), selectinload(Order.reviews))
+        .order_by(Order.created_at.desc())
+    )
     if order_status:
         if order_status not in ORDER_STATUSES:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid order status")

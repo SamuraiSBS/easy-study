@@ -50,9 +50,15 @@ export function OrdersPage() {
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-2 text-base">
               {order.status === 'done' ? (
-                <span className="app-soft-gradient inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-app-accent">
-                  <Star size={15} /> Можно оставить отзыв
-                </span>
+                order.review ? (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-app-line px-2.5 py-1 text-app-muted">
+                    <Star size={15} fill="currentColor" /> Оценка: {order.review.rating}/5
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-app-line px-2.5 py-1 text-app-muted">
+                    <Star size={15} /> Отзыв не оставлен
+                  </span>
+                )
               ) : (
                 <span className="inline-flex items-center gap-1 text-app-muted">
                   <MessageSquare size={15} /> Админ свяжется в Telegram

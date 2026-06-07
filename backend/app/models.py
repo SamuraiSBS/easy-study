@@ -70,6 +70,10 @@ class Order(Base, TimestampMixin):
         cascade="all, delete-orphan",
     )
 
+    @property
+    def review(self) -> "Review | None":
+        return self.reviews[0] if self.reviews else None
+
 
 class OrderAttachment(Base):
     __tablename__ = "order_attachments"

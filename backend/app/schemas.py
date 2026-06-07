@@ -73,6 +73,18 @@ class OrderAttachmentRead(BaseModel):
     created_at: datetime
 
 
+class ReviewRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    user_id: int
+    order_id: int | None
+    rating: int
+    text: str
+    is_published: bool
+    created_at: datetime
+
+
 class OrderRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -91,6 +103,7 @@ class OrderRead(BaseModel):
     updated_at: datetime
     completed_at: datetime | None
     attachments: list[OrderAttachmentRead] = []
+    review: ReviewRead | None = None
 
 
 class AdminOrderRead(OrderRead):
@@ -105,18 +118,6 @@ class AdminOrderUpdate(BaseModel):
 class ReviewCreate(BaseModel):
     rating: int = Field(ge=1, le=5)
     text: str = Field(min_length=2, max_length=3000)
-
-
-class ReviewRead(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: int
-    user_id: int
-    order_id: int | None
-    rating: int
-    text: str
-    is_published: bool
-    created_at: datetime
 
 
 class AdminReviewRead(ReviewRead):

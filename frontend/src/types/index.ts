@@ -49,6 +49,7 @@ export type Order = {
   updated_at: string;
   completed_at: string | null;
   attachments: OrderAttachment[];
+  review: Review | null;
 };
 
 export type AdminOrder = Order & {

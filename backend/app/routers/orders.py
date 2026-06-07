@@ -23,7 +23,7 @@ MAX_ORDER_ATTACHMENTS = 5
 
 async def get_order_or_404(db: AsyncSession, order_id: int) -> Order:
     result = await db.execute(
-        select(Order).options(selectinload(Order.attachments)).where(Order.id == order_id)
+        select(Order).options(selectinload(Order.attachments), selectinload(Order.reviews)).where(Order.id == order_id)
     )
     order = result.scalar_one_or_none()
     if order is None:
@@ -149,7 +149,7 @@ async def list_my_orders(
 ):
     result = await db.execute(
         select(Order)
-        .options(selectinload(Order.attachments))
+        .options(selectinload(Order.attachments), selectinload(Order.reviews))
         .where(Order.user_id == current_user.id)
         .order_by(Order.created_at.desc())
     )

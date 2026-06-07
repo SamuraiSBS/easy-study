@@ -3,7 +3,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from app.config import settings
-from app.models import Service, User
+from app.models import Order, Service, User
 from app.services.telegram_bot import telegram_bot
 
 
@@ -115,3 +115,45 @@ async def test_create_order_rejects_more_than_five_attachments(client, session_f
     )
 
     assert response.status_code == 400
+
+
+async def test_get_order_includes_existing_review(client, session_factory):
+    async with session_factory() as db:
+        service = Service(
+            title="Essay",
+            description="Essay preparation",
+            price_from=1000,
+            price_to=2000,
+            category="Writing",
+            is_active=True,
+            order_num=1,
+        )
+        db.add(service)
+        await db.commit()
+        await db.refresh(service)
+        service_id = service.id
+
+    response = await client.post(
+        "/api/orders",
+        json={"service_id": service_id, "customer_comment": "Need an essay"},
+    )
+    assert response.status_code == 201
+    order_id = response.json()["id"]
+
+    async with session_factory() as db:
+        order = await db.get(Order, order_id)
+        assert order is not None
+        order.status = "done"
+        await db.commit()
+
+    review_response = await client.post(
+        f"/api/orders/{order_id}/review",
+        json={"rating": 4, "text": "Good work"},
+    )
+    assert review_response.status_code == 201
+
+    order_response = await client.get(f"/api/orders/{order_id}")
+    assert order_response.status_code == 200
+    review = order_response.json()["review"]
+    assert review["rating"] == 4
+    assert review["text"] == "Good work"

@@ -22,6 +22,8 @@ export function OrderDetailPage() {
     return <ErrorState message={error || 'Заказ не найден'} onRetry={reload} />;
   }
 
+  const review = order.review;
+
   return (
     <div className="space-y-4">
       <MotionLink
@@ -65,15 +67,25 @@ export function OrderDetailPage() {
           ) : null}
         </dl>
         {order.status === 'done' ? (
-          <MotionLink
-            to={`/orders/${order.id}/review`}
-            className="app-accent-gradient app-cta-once mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText"
-            whileHover={{ y: -2, scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            transition={springTransition}
-          >
-            <Star size={18} /> Оставить отзыв
-          </MotionLink>
+          review ? (
+            <div className="mt-6 rounded-2xl border border-app-line bg-app-bg p-4">
+              <div className="flex items-center gap-2 text-base font-bold text-app-text">
+                <Star size={18} fill="currentColor" className="text-app-accent" />
+                Отзыв оставлен: {review.rating}/5
+              </div>
+              <p className="mt-3 whitespace-pre-line text-base leading-7 text-app-muted">{review.text}</p>
+            </div>
+          ) : (
+            <MotionLink
+              to={`/orders/${order.id}/review`}
+              className="app-accent-gradient app-cta-once mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText"
+              whileHover={{ y: -2, scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              transition={springTransition}
+            >
+              <Star size={18} /> Оставить отзыв
+            </MotionLink>
+          )
         ) : null}
       </AnimatedSection>
     </div>
