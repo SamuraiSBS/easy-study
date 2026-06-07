@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, Send, Star } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { AnimatedSection, springTransition } from '../components/Motion';
 import { Price } from '../components/Price';
@@ -20,6 +20,8 @@ export function ServicePage() {
   if (error || !service) {
     return <ErrorState message={error || 'Услуга не найдена'} onRetry={reload} />;
   }
+
+  const reviews = service.reviews || [];
 
   return (
     <div className="space-y-4">
@@ -48,6 +50,45 @@ export function ServicePage() {
         >
           <Send size={18} /> Оформить заявку
         </MotionLink>
+      </AnimatedSection>
+      <AnimatedSection className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" delay={0.04}>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-xl font-bold leading-tight">Отзывы клиентов</h2>
+          {reviews.length > 0 ? (
+            <span className="rounded-full bg-app-line px-3 py-1 text-sm font-semibold text-app-muted">
+              {reviews.length}
+            </span>
+          ) : null}
+        </div>
+        {reviews.length === 0 ? (
+          <p className="mt-3 text-base leading-7 text-app-muted">Опубликованных отзывов по этой услуге пока нет.</p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {reviews.map((review) => (
+              <div key={review.id} className="rounded-2xl border border-app-line bg-app-bg/60 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="truncate text-base font-semibold">{review.user_name}</div>
+                    <div className="mt-1 flex items-center gap-1 text-app-accent" aria-label={`Оценка ${review.rating} из 5`}>
+                      {Array.from({ length: 5 }, (_, index) => (
+                        <Star
+                          key={index}
+                          size={16}
+                          fill={index < review.rating ? 'currentColor' : 'none'}
+                          className={index < review.rating ? 'text-app-accent' : 'text-app-muted'}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <time className="shrink-0 text-sm text-app-muted" dateTime={review.created_at}>
+                    {new Date(review.created_at).toLocaleDateString('ru-RU')}
+                  </time>
+                </div>
+                <p className="mt-3 whitespace-pre-line text-base leading-7 text-app-muted">{review.text}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </AnimatedSection>
     </div>
   );

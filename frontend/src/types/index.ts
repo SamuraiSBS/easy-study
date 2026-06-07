@@ -20,6 +20,7 @@ export type Service = {
   order_num: number;
   created_at: string;
   updated_at: string;
+  reviews?: ServiceReview[];
 };
 
 export type OrderStatus = 'new' | 'contacted' | 'in_progress' | 'done' | 'cancelled';
@@ -64,6 +65,15 @@ export type Review = {
   text: string;
   is_published: boolean;
   created_at: string;
+};
+
+export type ServiceReview = {
+  id: number;
+  order_id: number | null;
+  rating: number;
+  text: string;
+  created_at: string;
+  user_name: string;
 };
 
 export type AdminReview = Review & {

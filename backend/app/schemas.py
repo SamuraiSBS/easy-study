@@ -57,6 +57,19 @@ class ServiceRead(ServiceBase):
     updated_at: datetime
 
 
+class ServiceReviewRead(BaseModel):
+    id: int
+    order_id: int | None
+    rating: int
+    text: str
+    created_at: datetime
+    user_name: str
+
+
+class ServiceWithReviewsRead(ServiceRead):
+    reviews: list[ServiceReviewRead] = []
+
+
 class OrderCreate(BaseModel):
     service_id: int
     customer_comment: str = Field(default="", max_length=4000)
