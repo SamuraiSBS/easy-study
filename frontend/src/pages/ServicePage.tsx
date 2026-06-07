@@ -38,18 +38,18 @@ export function ServicePage() {
         <div className="text-base font-semibold text-app-accent">{service.category}</div>
         <h1 className="mt-2 text-3xl font-bold leading-tight">{service.title}</h1>
         <p className="mt-4 whitespace-pre-line text-base leading-7 text-app-muted">{service.description}</p>
-        <div className="mt-5 text-xl font-bold">
-          <Price priceFrom={service.price_from} priceTo={service.price_to} />
+        <div className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+          <Price variant="hero" priceFrom={service.price_from} priceTo={service.price_to} />
+          <MotionLink
+            to={`/services/${service.id}/order`}
+            className="app-accent-gradient app-cta-once inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText sm:w-auto"
+            whileHover={{ y: -2, scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            transition={springTransition}
+          >
+            <Send size={18} /> Оформить заявку
+          </MotionLink>
         </div>
-        <MotionLink
-          to={`/services/${service.id}/order`}
-          className="app-accent-gradient app-cta-once mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText"
-          whileHover={{ y: -2, scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
-          transition={springTransition}
-        >
-          <Send size={18} /> Оформить заявку
-        </MotionLink>
       </AnimatedSection>
       <AnimatedSection className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" delay={0.04}>
         <div className="flex items-center justify-between gap-3">

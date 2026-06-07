@@ -45,8 +45,8 @@ export function OrdersPage() {
               </div>
               <StatusBadge status={order.status} />
             </div>
-            <div className="mt-3 text-base text-app-muted">
-              <Price priceFrom={order.price_from_snapshot} priceTo={order.price_to_snapshot} />
+            <div className="mt-4">
+              <Price variant="badge" className="w-full" priceFrom={order.price_from_snapshot} priceTo={order.price_to_snapshot} />
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-2 text-base">
               {order.status === 'done' ? (

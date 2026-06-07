@@ -43,8 +43,8 @@ export function OrderDetailPage() {
           </div>
           <StatusBadge status={order.status} />
         </div>
-        <div className="mt-4 text-base font-bold text-app-accent">
-          <Price priceFrom={order.price_from_snapshot} priceTo={order.price_to_snapshot} />
+        <div className="mt-4">
+          <Price variant="badge" priceFrom={order.price_from_snapshot} priceTo={order.price_to_snapshot} />
         </div>
         <dl className="mt-5 space-y-4 text-base leading-7">
           <div>

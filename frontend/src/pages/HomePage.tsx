@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, FileText } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AnimatedList, AnimatedSection, listItemVariants, springTransition } from '../components/Motion';
 import { EmptyState, ErrorState, ServicesSkeleton } from '../components/State';
@@ -50,28 +50,21 @@ export function HomePage() {
               <MotionLink
                 key={service.id}
                 to={`/services/${service.id}`}
-                className="app-card group rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft transition-colors hover:border-app-accent"
+                className="app-card group flex h-full rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft transition-colors hover:border-app-accent"
                 variants={listItemVariants}
                 whileHover={{ y: -3, scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
                 transition={springTransition}
               >
-                <div className="flex items-start gap-3">
-                  <motion.span
-                    className="app-soft-gradient flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-app-accent"
-                    whileHover={{ rotate: -3, scale: 1.06 }}
-                    transition={springTransition}
-                  >
-                    <FileText size={20} />
-                  </motion.span>
-                  <div className="min-w-0 flex-1">
+                <div className="flex h-full w-full items-start gap-3">
+                  <div className="flex min-w-0 flex-1 flex-col">
                     <div className="flex items-start justify-between gap-3">
                       <h3 className="text-lg font-bold leading-snug">{service.title}</h3>
                       <ArrowRight className="shrink-0 text-app-muted transition group-hover:translate-x-1 group-hover:text-app-accent" size={18} />
                     </div>
                     <p className="mt-2 line-clamp-2 text-base leading-7 text-app-muted">{service.description}</p>
-                    <div className="mt-3 text-base font-bold text-app-accent">
-                      <Price priceFrom={service.price_from} priceTo={service.price_to} />
+                    <div className="mt-4">
+                      <Price variant="badge" className="w-full" priceFrom={service.price_from} priceTo={service.price_to} />
                     </div>
                   </div>
                 </div>

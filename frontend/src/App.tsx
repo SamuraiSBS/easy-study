@@ -67,6 +67,7 @@ export function App() {
         <AnimatePresence mode="wait" initial={false}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<PageTransition direction={pageDirection}><HomePage /></PageTransition>} />
+            <Route path="/services" element={<PageTransition direction={pageDirection}><HomePage /></PageTransition>} />
             <Route path="/services/:serviceId" element={<PageTransition direction={pageDirection}><ServicePage /></PageTransition>} />
             <Route path="/services/:serviceId/order" element={<PageTransition direction={pageDirection}><OrderFormPage /></PageTransition>} />
             <Route path="/orders" element={<PageTransition direction={pageDirection}><OrdersPage /></PageTransition>} />

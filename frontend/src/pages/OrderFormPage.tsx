@@ -74,8 +74,8 @@ export function OrderFormPage() {
       <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <div className="text-base text-app-muted">Заявка на услугу</div>
         <h1 className="mt-1 text-xl font-bold leading-tight">{service.title}</h1>
-        <div className="mt-3 text-base font-bold text-app-accent">
-          <Price priceFrom={service.price_from} priceTo={service.price_to} />
+        <div className="mt-4">
+          <Price variant="badge" priceFrom={service.price_from} priceTo={service.price_to} />
         </div>
       </motion.section>
 
