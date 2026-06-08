@@ -12,6 +12,13 @@ if (-not (Test-Path $python)) {
     throw "Backend venv not found: $python"
 }
 
+$env:DATABASE_URL = $databaseUrl
+$env:AUTO_CREATE_DB = "true"
+$env:DEV_TELEGRAM_USER_ID = "123456789"
+$env:TELEGRAM_BOT_TOKEN = "local-disabled"
+$env:FRONTEND_ORIGIN = "http://localhost:5173"
+$env:FRONTEND_ORIGINS = "http://localhost:5173"
+
 function Test-Backend {
     try {
         $response = Invoke-WebRequest -Uri "http://localhost:8000/api/services" -UseBasicParsing -TimeoutSec 2
@@ -23,21 +30,23 @@ function Test-Backend {
 
 $status = Test-Backend
 if ($status -eq 200) {
+    Push-Location $backend
+    try {
+        & $python -m scripts.ensure_local_admin
+    } finally {
+        Pop-Location
+    }
     Write-Host "Backend already running: http://localhost:8000/api"
+    Write-Host "Admin user ready: 123456789"
+    Write-Host "Admin page: http://localhost:5173/admin"
     exit 0
 }
-
-$env:DATABASE_URL = $databaseUrl
-$env:AUTO_CREATE_DB = "true"
-$env:DEV_TELEGRAM_USER_ID = "123456789"
-$env:TELEGRAM_BOT_TOKEN = "local-disabled"
-$env:FRONTEND_ORIGIN = "http://localhost:5173"
-$env:FRONTEND_ORIGINS = "http://localhost:5173"
 
 Push-Location $backend
 try {
     & $python -c "import asyncio; import app.models; from app.database import create_db; asyncio.run(create_db())"
     & $python -m app.seed_data
+    & $python -m scripts.ensure_local_admin
 } finally {
     Pop-Location
 }
@@ -64,6 +73,8 @@ for ($i = 0; $i -lt 20; $i++) {
     Start-Sleep -Milliseconds 500
     if ((Test-Backend) -eq 200) {
         Write-Host "Backend started: http://localhost:8000/api"
+        Write-Host "Admin user ready: 123456789"
+        Write-Host "Admin page: http://localhost:5173/admin"
         Write-Host "PID: $($process.Id)"
         Write-Host "DEV_TELEGRAM_USER_ID: 123456789"
         exit 0
