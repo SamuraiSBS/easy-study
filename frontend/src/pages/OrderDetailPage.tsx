@@ -8,12 +8,20 @@ import { ErrorState, LoadingState } from '../components/State';
 import { StatusBadge } from '../components/StatusBadge';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
+import { getOrderServiceColor } from '../utils/serviceColors';
 
 const MotionLink = motion(Link);
 
 export function OrderDetailPage() {
   const orderId = Number(useParams().orderId);
-  const { data: order, loading, error, reload } = useAsyncData(() => api.getOrder(orderId), [orderId]);
+  const { data, loading, error, reload } = useAsyncData(
+    async () => {
+      const [order, services] = await Promise.all([api.getOrder(orderId), api.getServices()]);
+      return { order, services };
+    },
+    [orderId]
+  );
+  const order = data?.order;
 
   if (loading) {
     return <LoadingState />;
@@ -23,6 +31,7 @@ export function OrderDetailPage() {
   }
 
   const review = order.review;
+  const serviceColor = getOrderServiceColor(order, data?.services || []);
 
   return (
     <div className="space-y-4">
@@ -44,7 +53,7 @@ export function OrderDetailPage() {
           <StatusBadge status={order.status} />
         </div>
         <div className="mt-4">
-          <Price variant="badge" priceFrom={order.price_from_snapshot} priceTo={order.price_to_snapshot} />
+          <Price variant="badge" color={serviceColor} priceFrom={order.price_from_snapshot} priceTo={order.price_to_snapshot} />
         </div>
         <dl className="mt-5 space-y-4 text-base leading-7">
           <div>

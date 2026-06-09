@@ -158,6 +158,30 @@ button:disabled {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
 }
 
+.service-icon-surface {
+  color: var(--service-color);
+  border-color: var(--service-color-soft);
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.96), transparent 36%),
+    linear-gradient(145deg, var(--service-color-soft), rgba(255, 255, 255, 0.9));
+  box-shadow:
+    0 14px 28px var(--service-color-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.86);
+}
+
+.service-price-badge {
+  justify-content: flex-start;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.service-price-badge > span {
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+
 .app-loading-shimmer {
   position: relative;
   overflow: hidden;

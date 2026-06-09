@@ -10,12 +10,14 @@ import {
   type LucideIcon
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import type { CSSProperties } from 'react';
 import { AnimatedList, AnimatedSection, listItemVariants, springTransition } from '../components/Motion';
 import { EmptyState, ErrorState, ServicesSkeleton } from '../components/State';
 import { Price } from '../components/Price';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
 import type { Service } from '../types';
+import { getServiceColorByIndex } from '../utils/serviceColors';
 
 const MotionLink = motion(Link);
 
@@ -52,30 +54,41 @@ function getServiceIcon(title: string): LucideIcon {
   return FileText;
 }
 
-function ServiceCard({ service }: { service: Service }) {
+function ServiceCard({ service, color }: { service: Service; color: string }) {
   const ServiceIcon = getServiceIcon(service.title);
+  const colorStyle = {
+    '--service-color': color,
+    '--service-color-soft': `${color}16`
+  } as CSSProperties;
 
   return (
     <MotionLink
       to={`/services/${service.id}`}
-      className="app-card group flex h-full rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft transition-colors hover:border-app-accent"
+      className="app-card group flex h-full rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft transition-colors"
+      style={colorStyle}
       variants={listItemVariants}
       whileHover={{ y: -3, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       transition={springTransition}
     >
       <div className="flex h-full w-full items-start gap-4">
-        <div className="app-soft-gradient flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl border border-app-line text-app-accent shadow-soft">
+        <div className="service-icon-surface flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl border shadow-soft">
           <ServiceIcon size={38} strokeWidth={2.3} aria-hidden="true" />
         </div>
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-start justify-between gap-3">
             <h3 className="text-lg font-bold leading-snug">{service.title}</h3>
-            <ArrowRight className="shrink-0 text-app-muted transition group-hover:translate-x-1 group-hover:text-app-accent" size={18} />
+            <ArrowRight className="shrink-0 text-[var(--service-color)] transition group-hover:translate-x-1" size={18} />
           </div>
           <p className="mt-2 line-clamp-2 text-base leading-7 text-app-muted">{service.description}</p>
           <div className="mt-4">
-            <Price variant="badge" className="w-full" priceFrom={service.price_from} priceTo={service.price_to} />
+            <Price
+              variant="badge"
+              className="service-price-badge w-full"
+              color={color}
+              priceFrom={service.price_from}
+              priceTo={service.price_to}
+            />
           </div>
         </div>
       </div>
@@ -95,6 +108,15 @@ export function HomePage() {
 
   const services = data || [];
   const grouped = groupServices(services);
+  let cardColorIndex = 0;
+  const groupedWithColors = Object.entries(grouped).map(([category, categoryServices]) => ({
+    category,
+    services: categoryServices.map((service) => {
+      const color = getServiceColorByIndex(cardColorIndex);
+      cardColorIndex += 1;
+      return { service, color };
+    })
+  }));
 
   return (
     <div className="space-y-5">
@@ -107,12 +129,12 @@ export function HomePage() {
 
       {services.length === 0 ? <EmptyState title="Услуги пока не добавлены" /> : null}
 
-      {Object.entries(grouped).map(([category, categoryServices], categoryIndex) => (
+      {groupedWithColors.map(({ category, services: categoryServices }, categoryIndex) => (
         <AnimatedSection key={category} className="space-y-3" delay={categoryIndex * 0.04}>
           <h2 className="text-lg font-bold leading-tight text-app-text">{category}</h2>
           <AnimatedList className="grid gap-3 md:grid-cols-2">
-            {categoryServices.map((service) => (
-              <ServiceCard key={service.id} service={service} />
+            {categoryServices.map(({ service, color }) => (
+              <ServiceCard key={service.id} service={service} color={color} />
             ))}
           </AnimatedList>
         </AnimatedSection>

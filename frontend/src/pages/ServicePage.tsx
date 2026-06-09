@@ -6,13 +6,21 @@ import { Price } from '../components/Price';
 import { ErrorState, LoadingState } from '../components/State';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
+import { getServiceColor } from '../utils/serviceColors';
 
 const MotionLink = motion(Link);
 
 export function ServicePage() {
   const params = useParams();
   const serviceId = Number(params.serviceId);
-  const { data: service, loading, error, reload } = useAsyncData(() => api.getService(serviceId), [serviceId]);
+  const { data, loading, error, reload } = useAsyncData(
+    async () => {
+      const [service, services] = await Promise.all([api.getService(serviceId), api.getServices()]);
+      return { service, services };
+    },
+    [serviceId]
+  );
+  const service = data?.service;
 
   if (loading) {
     return <LoadingState />;
@@ -22,6 +30,7 @@ export function ServicePage() {
   }
 
   const reviews = service.reviews || [];
+  const serviceColor = getServiceColor(service.id, data?.services || []);
 
   return (
     <div className="space-y-4">
@@ -39,7 +48,7 @@ export function ServicePage() {
         <h1 className="mt-2 text-3xl font-bold leading-tight">{service.title}</h1>
         <p className="mt-4 whitespace-pre-line text-base leading-7 text-app-muted">{service.description}</p>
         <div className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
-          <Price variant="hero" priceFrom={service.price_from} priceTo={service.price_to} />
+          <Price variant="hero" color={serviceColor} priceFrom={service.price_from} priceTo={service.price_to} />
           <MotionLink
             to={`/services/${service.id}/order`}
             className="app-accent-gradient app-cta-once inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText sm:w-auto"

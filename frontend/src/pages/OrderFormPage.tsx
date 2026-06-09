@@ -8,6 +8,7 @@ import { ErrorState, LoadingState } from '../components/State';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
 import { hapticSuccess } from '../services/telegram';
+import { getServiceColor } from '../utils/serviceColors';
 
 const MAX_ATTACHMENTS = 5;
 
@@ -20,7 +21,14 @@ export function OrderFormPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [attachments, setAttachments] = useState<File[]>([]);
-  const { data: service, loading, error, reload } = useAsyncData(() => api.getService(serviceId), [serviceId]);
+  const { data, loading, error, reload } = useAsyncData(
+    async () => {
+      const [service, services] = await Promise.all([api.getService(serviceId), api.getServices()]);
+      return { service, services };
+    },
+    [serviceId]
+  );
+  const service = data?.service;
 
   function addAttachments(files: FileList | null) {
     if (!files?.length) {
@@ -69,13 +77,15 @@ export function OrderFormPage() {
     return <SuccessBurst title="Заявка отправлена" />;
   }
 
+  const serviceColor = getServiceColor(service.id, data?.services || []);
+
   return (
     <AnimatedList className="space-y-4" as="form" onSubmit={handleSubmit}>
       <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <div className="text-base text-app-muted">Заявка на услугу</div>
         <h1 className="mt-1 text-xl font-bold leading-tight">{service.title}</h1>
         <div className="mt-4">
-          <Price variant="badge" priceFrom={service.price_from} priceTo={service.price_to} />
+          <Price variant="badge" color={serviceColor} priceFrom={service.price_from} priceTo={service.price_to} />
         </div>
       </motion.section>
 

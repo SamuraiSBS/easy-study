@@ -5,6 +5,7 @@ type PriceProps = {
   priceTo: number | null;
   variant?: PriceVariant;
   className?: string;
+  color?: string;
 };
 
 export function formatPrice(priceFrom: number, priceTo: number | null) {
@@ -15,8 +16,9 @@ export function formatPrice(priceFrom: number, priceTo: number | null) {
   return `\u043e\u0442 ${from} \u20bd`;
 }
 
-export function Price({ priceFrom, priceTo, variant = 'inline', className = '' }: PriceProps) {
+export function Price({ priceFrom, priceTo, variant = 'inline', className = '', color }: PriceProps) {
   const value = formatPrice(priceFrom, priceTo);
+  const priceStyle = color ? { color } : undefined;
 
   if (variant === 'badge') {
     return (
@@ -26,7 +28,9 @@ export function Price({ priceFrom, priceTo, variant = 'inline', className = '' }
           className
         ].join(' ')}
       >
-        <span className="max-w-full break-words text-3xl font-extrabold leading-tight text-app-text">{value}</span>
+        <span className="max-w-full break-words text-3xl font-extrabold leading-tight text-app-text" style={priceStyle}>
+          {value}
+        </span>
       </span>
     );
   }
@@ -39,10 +43,16 @@ export function Price({ priceFrom, priceTo, variant = 'inline', className = '' }
           className
         ].join(' ')}
       >
-        <span className="max-w-full break-words text-3xl font-extrabold leading-tight text-app-text">{value}</span>
+        <span className="max-w-full break-words text-3xl font-extrabold leading-tight text-app-text" style={priceStyle}>
+          {value}
+        </span>
       </span>
     );
   }
 
-  return <span className={className}>{value}</span>;
+  return (
+    <span className={className} style={priceStyle}>
+      {value}
+    </span>
+  );
 }

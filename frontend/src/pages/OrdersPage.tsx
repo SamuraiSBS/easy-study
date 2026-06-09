@@ -7,11 +7,18 @@ import { EmptyState, ErrorState, OrdersSkeleton } from '../components/State';
 import { StatusBadge } from '../components/StatusBadge';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
+import { getOrderServiceColor } from '../utils/serviceColors';
 
 const MotionLink = motion(Link);
 
 export function OrdersPage() {
-  const { data, loading, error, reload } = useAsyncData(api.getMyOrders, []);
+  const { data, loading, error, reload } = useAsyncData(
+    async () => {
+      const [orders, services] = await Promise.all([api.getMyOrders(), api.getServices()]);
+      return { orders, services };
+    },
+    []
+  );
 
   if (loading) {
     return <OrdersSkeleton />;
@@ -20,7 +27,8 @@ export function OrdersPage() {
     return <ErrorState message={error} onRetry={reload} />;
   }
 
-  const orders = data || [];
+  const orders = data?.orders || [];
+  const services = data?.services || [];
   return (
     <div className="space-y-4">
       <AnimatedSection>
@@ -46,7 +54,13 @@ export function OrdersPage() {
               <StatusBadge status={order.status} />
             </div>
             <div className="mt-4">
-              <Price variant="badge" className="w-full" priceFrom={order.price_from_snapshot} priceTo={order.price_to_snapshot} />
+              <Price
+                variant="badge"
+                className="w-full"
+                color={getOrderServiceColor(order, services)}
+                priceFrom={order.price_from_snapshot}
+                priceTo={order.price_to_snapshot}
+              />
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-2 text-base">
               {order.status === 'done' ? (
