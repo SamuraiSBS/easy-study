@@ -1,4 +1,5 @@
 import type { Order, Service } from '../types';
+import type { CSSProperties } from 'react';
 
 export const SERVICE_CARD_COLORS = ['#2ED67D', '#FF8A00', '#7B3DFF'] as const;
 
@@ -30,4 +31,14 @@ export function getOrderServiceColor(order: Order, services: Service[]) {
   );
 
   return serviceIndex === -1 ? undefined : getServiceColorByIndex(serviceIndex);
+}
+
+export function getServiceAccentStyle(color?: string) {
+  const accentColor = color || SERVICE_CARD_COLORS[0];
+  return {
+    '--service-color': accentColor,
+    '--service-color-soft': `${accentColor}18`,
+    '--service-color-mid': `${accentColor}CC`,
+    '--service-color-deep': accentColor
+  } as CSSProperties;
 }

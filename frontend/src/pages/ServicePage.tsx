@@ -6,7 +6,7 @@ import { Price } from '../components/Price';
 import { ErrorState, LoadingState } from '../components/State';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
-import { getServiceColor } from '../utils/serviceColors';
+import { getServiceAccentStyle, getServiceColor } from '../utils/serviceColors';
 
 const MotionLink = motion(Link);
 
@@ -31,9 +31,10 @@ export function ServicePage() {
 
   const reviews = service.reviews || [];
   const serviceColor = getServiceColor(service.id, data?.services || []);
+  const serviceStyle = getServiceAccentStyle(serviceColor);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" style={serviceStyle}>
       <MotionLink
         to="/"
         className="inline-flex items-center gap-2 text-base font-semibold text-app-muted hover:text-app-text"
@@ -43,15 +44,15 @@ export function ServicePage() {
       >
         <ArrowLeft size={18} /> Назад
       </MotionLink>
-      <AnimatedSection className="app-card app-card-strong rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft">
-        <div className="text-base font-semibold text-app-accent">{service.category}</div>
+      <AnimatedSection className="app-card app-card-strong app-service-accent-card rounded-3xl border border-app-line bg-app-surface p-5 pl-6 shadow-soft">
+        <div className="text-base font-semibold text-[var(--service-color)]">{service.category}</div>
         <h1 className="mt-2 text-3xl font-bold leading-tight">{service.title}</h1>
         <p className="mt-4 whitespace-pre-line text-base leading-7 text-app-muted">{service.description}</p>
         <div className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
           <Price variant="hero" color={serviceColor} priceFrom={service.price_from} priceTo={service.price_to} />
           <MotionLink
             to={`/services/${service.id}/order`}
-            className="app-accent-gradient app-cta-once inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText sm:w-auto"
+            className={`${serviceColor ? 'app-service-gradient' : 'app-accent-gradient'} app-cta-once inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText sm:w-auto`}
             whileHover={{ y: -2, scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
             transition={springTransition}

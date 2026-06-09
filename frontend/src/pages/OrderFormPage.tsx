@@ -8,7 +8,7 @@ import { ErrorState, LoadingState } from '../components/State';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
 import { hapticSuccess } from '../services/telegram';
-import { getServiceColor } from '../utils/serviceColors';
+import { getServiceAccentStyle, getServiceColor } from '../utils/serviceColors';
 
 const MAX_ATTACHMENTS = 5;
 
@@ -78,10 +78,11 @@ export function OrderFormPage() {
   }
 
   const serviceColor = getServiceColor(service.id, data?.services || []);
+  const serviceStyle = getServiceAccentStyle(serviceColor);
 
   return (
-    <AnimatedList className="space-y-4" as="form" onSubmit={handleSubmit}>
-      <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
+    <AnimatedList className="space-y-4" as="form" onSubmit={handleSubmit} style={serviceStyle}>
+      <motion.section className="app-card app-service-accent-card rounded-3xl border border-app-line bg-app-surface p-5 pl-6 shadow-soft" variants={listItemVariants}>
         <div className="text-base text-app-muted">Заявка на услугу</div>
         <h1 className="mt-1 text-xl font-bold leading-tight">{service.title}</h1>
         <div className="mt-4">
@@ -95,7 +96,7 @@ export function OrderFormPage() {
         </label>
         <textarea
           id="customer-comment"
-          className="mt-3 min-h-40 w-full resize-y rounded-2xl border border-app-line bg-white px-4 py-3 text-base leading-7 outline-none transition-colors focus:border-app-accent"
+          className="service-aware-control mt-3 min-h-40 w-full resize-y rounded-2xl border bg-white px-4 py-3 text-base leading-7 outline-none transition-colors"
           value={comment}
           onChange={(event) => setComment(event.target.value)}
           placeholder="Тема, срок, требования, объем, пожелания"
@@ -112,7 +113,7 @@ export function OrderFormPage() {
           <span className="text-sm text-app-muted">{attachments.length}/{MAX_ATTACHMENTS}</span>
         </div>
         <label
-          className="mt-3 flex min-h-20 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-dashed border-app-line bg-white px-4 py-3 text-base font-semibold text-app-muted transition-colors hover:border-app-accent hover:text-app-text"
+          className="service-aware-dropzone mt-3 flex min-h-20 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-dashed bg-white px-4 py-3 text-base font-semibold text-app-muted transition-colors"
           htmlFor="order-attachments"
         >
           <Paperclip size={18} /> Прикрепить
@@ -156,7 +157,7 @@ export function OrderFormPage() {
 
       <AnimatedButton
         type="submit"
-        className="app-accent-gradient app-cta-once inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText disabled:opacity-60"
+        className={`${serviceColor ? 'app-service-gradient' : 'app-accent-gradient'} app-cta-once inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText disabled:opacity-60`}
         disabled={submitting}
       >
         <Send size={18} /> {submitting ? 'Отправка' : 'Подтвердить заявку'}

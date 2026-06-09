@@ -11,10 +11,10 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
 };
 
 const STATUS_CLASS: Record<OrderStatus, string> = {
-  new: 'bg-[#e9fbf1] text-[#1aa060] border-[#a7e3bf]',
-  contacted: 'bg-[#d7f5e4] text-[#188f57] border-[#8ad8ad]',
-  in_progress: 'bg-[#c3efd5] text-[#12844f] border-[#63c991]',
-  done: 'bg-[#24b26d] text-white border-[#24b26d]',
+  new: 'bg-[#7B3DFF18] text-[#6530d6] border-[#7B3DFF55]',
+  contacted: 'bg-[#2ED67D18] text-[#1aa060] border-[#2ED67D55]',
+  in_progress: 'bg-[#FF8A0018] text-[#b95f00] border-[#FF8A0055]',
+  done: 'bg-[#2ED67D] text-white border-[#2ED67D]',
   cancelled: 'bg-[#eef8f2] text-[#35664d] border-[#c4e7d2]'
 };
 
@@ -31,7 +31,7 @@ function statusAnimation(status: OrderStatus) {
       opacity: 1,
       y: 0,
       scale: [1, 1.1, 1],
-      boxShadow: ['0 0 0 rgba(36, 178, 105, 0)', '0 0 0 5px rgba(36, 178, 105, 0.2)', '0 0 0 rgba(36, 178, 105, 0)']
+      boxShadow: ['0 0 0 rgba(46, 214, 125, 0)', '0 0 0 5px rgba(46, 214, 125, 0.22)', '0 0 0 rgba(46, 214, 125, 0)']
     };
   }
   if (status === 'cancelled') {

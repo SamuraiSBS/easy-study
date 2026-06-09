@@ -7,7 +7,7 @@ import { EmptyState, ErrorState, OrdersSkeleton } from '../components/State';
 import { StatusBadge } from '../components/StatusBadge';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
-import { getOrderServiceColor } from '../utils/serviceColors';
+import { getOrderServiceColor, getServiceAccentStyle } from '../utils/serviceColors';
 
 const MotionLink = motion(Link);
 
@@ -29,59 +29,69 @@ export function OrdersPage() {
 
   const orders = data?.orders || [];
   const services = data?.services || [];
+
   return (
     <div className="space-y-4">
       <AnimatedSection>
         <h1 className="text-3xl font-bold leading-tight">Мои заявки</h1>
       </AnimatedSection>
+
       {orders.length === 0 ? <EmptyState title="У вас пока нет заявок" /> : null}
+
       <AnimatedList className="space-y-3">
-        {orders.map((order) => (
-          <MotionLink
-            key={order.id}
-            to={`/orders/${order.id}`}
-            className="app-card group block rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft transition-colors hover:border-app-accent"
-            variants={listItemVariants}
-            whileHover={{ y: -3, scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            transition={springTransition}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="text-base text-app-muted">#{order.id}</div>
-                <h2 className="mt-1 text-lg font-bold leading-snug">{order.title_snapshot}</h2>
+        {orders.map((order) => {
+          const serviceColor = getOrderServiceColor(order, services);
+
+          return (
+            <MotionLink
+              key={order.id}
+              to={`/orders/${order.id}`}
+              className="app-card app-service-accent-card group block rounded-3xl border border-app-line bg-app-surface p-4 pl-5 shadow-soft transition-colors hover:border-[var(--service-color)]"
+              style={getServiceAccentStyle(serviceColor)}
+              variants={listItemVariants}
+              whileHover={{ y: -3, scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              transition={springTransition}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="text-base text-app-muted">#{order.id}</div>
+                  <h2 className="mt-1 text-lg font-bold leading-snug">{order.title_snapshot}</h2>
+                </div>
+                <StatusBadge status={order.status} />
               </div>
-              <StatusBadge status={order.status} />
-            </div>
-            <div className="mt-4">
-              <Price
-                variant="badge"
-                className="w-full"
-                color={getOrderServiceColor(order, services)}
-                priceFrom={order.price_from_snapshot}
-                priceTo={order.price_to_snapshot}
-              />
-            </div>
-            <div className="mt-4 flex flex-wrap items-center gap-2 text-base">
-              {order.status === 'done' ? (
-                order.review ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-app-line px-2.5 py-1 text-app-muted">
-                    <Star size={15} fill="currentColor" /> Оценка: {order.review.rating}/5
-                  </span>
+
+              <div className="mt-4">
+                <Price
+                  variant="badge"
+                  className="w-full"
+                  color={serviceColor}
+                  priceFrom={order.price_from_snapshot}
+                  priceTo={order.price_to_snapshot}
+                />
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center gap-2 text-base">
+                {order.status === 'done' ? (
+                  order.review ? (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-app-line px-2.5 py-1 text-app-muted">
+                      <Star size={15} fill="currentColor" /> Оценка: {order.review.rating}/5
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-app-line px-2.5 py-1 text-app-muted">
+                      <Star size={15} /> Отзыв не оставлен
+                    </span>
+                  )
                 ) : (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-app-line px-2.5 py-1 text-app-muted">
-                    <Star size={15} /> Отзыв не оставлен
+                  <span className="inline-flex items-center gap-1 text-app-muted">
+                    <MessageSquare size={15} /> Админ свяжется в Telegram
                   </span>
-                )
-              ) : (
-                <span className="inline-flex items-center gap-1 text-app-muted">
-                  <MessageSquare size={15} /> Админ свяжется в Telegram
-                </span>
-              )}
-              <ArrowRight className="ml-auto text-app-muted transition group-hover:translate-x-1 group-hover:text-app-accent" size={18} />
-            </div>
-          </MotionLink>
-        ))}
+                )}
+                <ArrowRight className="ml-auto text-app-muted transition group-hover:translate-x-1 group-hover:text-[var(--service-color)]" size={18} />
+              </div>
+            </MotionLink>
+          );
+        })}
       </AnimatedList>
     </div>
   );

@@ -10,14 +10,13 @@ import {
   type LucideIcon
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import type { CSSProperties } from 'react';
 import { AnimatedList, AnimatedSection, listItemVariants, springTransition } from '../components/Motion';
 import { EmptyState, ErrorState, ServicesSkeleton } from '../components/State';
 import { Price } from '../components/Price';
 import { useAsyncData } from '../hooks/useAsyncData';
 import { api } from '../services/api';
 import type { Service } from '../types';
-import { getServiceColorByIndex } from '../utils/serviceColors';
+import { getServiceAccentStyle, getServiceColorByIndex } from '../utils/serviceColors';
 
 const MotionLink = motion(Link);
 
@@ -56,15 +55,12 @@ function getServiceIcon(title: string): LucideIcon {
 
 function ServiceCard({ service, color }: { service: Service; color: string }) {
   const ServiceIcon = getServiceIcon(service.title);
-  const colorStyle = {
-    '--service-color': color,
-    '--service-color-soft': `${color}16`
-  } as CSSProperties;
+  const colorStyle = getServiceAccentStyle(color);
 
   return (
     <MotionLink
       to={`/services/${service.id}`}
-      className="app-card group flex h-full rounded-3xl border border-app-line bg-app-surface p-4 shadow-soft transition-colors"
+      className="app-card app-service-accent-card group flex h-full rounded-3xl border border-app-line bg-app-surface p-4 pl-5 shadow-soft transition-colors hover:border-[var(--service-color)]"
       style={colorStyle}
       variants={listItemVariants}
       whileHover={{ y: -3, scale: 1.01 }}

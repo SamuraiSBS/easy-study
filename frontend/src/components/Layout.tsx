@@ -1,7 +1,7 @@
 import { LayoutGroup, motion } from 'framer-motion';
 import { ClipboardList, Home, Shield, UserRound } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { User } from '../types';
 import { springTransition } from './Motion';
 
@@ -22,6 +22,23 @@ function isActiveRoute(pathname: string, path: string) {
     return pathname === '/';
   }
   return pathname === path || pathname.startsWith(`${path}/`);
+}
+
+const NAV_COLORS: Record<string, string> = {
+  '/': '#2ED67D',
+  '/orders': '#FF8A00',
+  '/profile': '#7B3DFF',
+  '/admin': '#2ED67D'
+};
+
+function navStyle(path: string) {
+  const color = NAV_COLORS[path] || '#2ED67D';
+
+  return {
+    '--nav-color': color,
+    '--nav-color-soft': `${color}28`,
+    '--nav-color-deep': color
+  } as CSSProperties;
 }
 
 export function Layout({ user, children }: LayoutProps) {
@@ -56,13 +73,14 @@ export function Layout({ user, children }: LayoutProps) {
                     aria-label={item.label}
                     aria-current={isActive ? 'page' : undefined}
                     onClick={() => navigate(item.path)}
+                    style={navStyle(item.path)}
                     whileTap={{ scale: 0.96 }}
                     transition={springTransition}
                   >
                     {isActive ? (
                       <motion.span
                         layoutId="active-bottom-tab"
-                        className="app-accent-gradient absolute inset-0 rounded-full"
+                        className="app-nav-active-gradient absolute inset-0 rounded-full"
                         transition={springTransition}
                       />
                     ) : null}
