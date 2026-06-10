@@ -26,7 +26,7 @@ export function ServicePage() {
     return <LoadingState />;
   }
   if (error || !service) {
-    return <ErrorState message={error || 'Услуга не найдена'} onRetry={reload} />;
+    return <ErrorState message={error || 'Не нашли эту услугу'} onRetry={reload} />;
   }
 
   const reviews = service.reviews || [];
@@ -42,7 +42,7 @@ export function ServicePage() {
         whileTap={{ scale: 0.97 }}
         transition={springTransition}
       >
-        <ArrowLeft size={18} /> Назад
+        <ArrowLeft size={18} /> К услугам
       </MotionLink>
       <AnimatedSection className="app-card app-card-strong app-service-accent-card rounded-3xl border border-app-line bg-app-surface p-5 pl-6 shadow-soft">
         <div className="text-base font-semibold text-[var(--service-color)]">{service.category}</div>
@@ -57,13 +57,13 @@ export function ServicePage() {
             whileTap={{ scale: 0.97 }}
             transition={springTransition}
           >
-            <Send size={18} /> Оформить заявку
+            <Send size={18} /> Оставить заявку
           </MotionLink>
         </div>
       </AnimatedSection>
       <AnimatedSection className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" delay={0.04}>
         <div className="flex items-center justify-between gap-3">
-          <h2 className="text-xl font-bold leading-tight">Отзывы клиентов</h2>
+          <h2 className="text-xl font-bold leading-tight">Отзывы</h2>
           {reviews.length > 0 ? (
             <span className="rounded-full bg-app-line px-3 py-1 text-sm font-semibold text-app-muted">
               {reviews.length}
@@ -71,7 +71,7 @@ export function ServicePage() {
           ) : null}
         </div>
         {reviews.length === 0 ? (
-          <p className="mt-3 text-base leading-7 text-app-muted">Опубликованных отзывов по этой услуге пока нет.</p>
+          <p className="mt-3 text-base leading-7 text-app-muted">По этой услуге пока нет отзывов.</p>
         ) : (
           <div className="mt-4 space-y-3">
             {reviews.map((review) => (

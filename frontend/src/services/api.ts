@@ -48,8 +48,8 @@ async function request<T>(path: string, options?: RequestInit, config: RequestCo
   });
 
   if (!response.ok) {
-    const errorPayload = await response.json().catch(() => ({ detail: 'Ошибка сервера' }));
-    const message = getErrorMessage(errorPayload.detail) || 'Ошибка сервера';
+    const errorPayload = await response.json().catch(() => ({ detail: 'Сервер не ответил' }));
+    const message = getErrorMessage(errorPayload.detail) || 'Сервер не ответил';
     if (config.showError !== false) {
       throw new Error(message);
     }
@@ -68,8 +68,8 @@ async function downloadRequest(path: string, filename: string): Promise<void> {
 
   const response = await fetch(`${API_URL}${path}`, { headers });
   if (!response.ok) {
-    const errorPayload = await response.json().catch(() => ({ detail: 'Ошибка сервера' }));
-    throw new Error(getErrorMessage(errorPayload.detail) || 'Ошибка сервера');
+    const errorPayload = await response.json().catch(() => ({ detail: 'Сервер не ответил' }));
+    throw new Error(getErrorMessage(errorPayload.detail) || 'Сервер не ответил');
   }
 
   const blob = await response.blob();

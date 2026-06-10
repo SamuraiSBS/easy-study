@@ -12,7 +12,7 @@ export function LoadingState() {
     >
       <div className="app-loading-shimmer flex min-h-14 items-center justify-center rounded-full px-5">
         <Loader2 className="mr-2 animate-spin" size={20} />
-        Загрузка
+        Загружаем
       </div>
     </motion.div>
   );
@@ -32,7 +32,7 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
       </div>
       {onRetry ? (
         <AnimatedButton type="button" className="app-accent-gradient mt-4 rounded-full px-5 py-3 text-base font-bold text-app-accentText" onClick={onRetry}>
-          Повторить
+          Попробовать еще раз
         </AnimatedButton>
       ) : null}
     </motion.div>

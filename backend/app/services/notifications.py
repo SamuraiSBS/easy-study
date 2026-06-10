@@ -20,7 +20,7 @@ def mini_app_url(path: str = "") -> str:
 
 def user_label(user: User) -> str:
     username = f"@{user.username}" if user.username else ""
-    name = user.first_name or "Пользователь"
+    name = user.first_name or "Клиент"
     return f"{name} {username}".strip()
 
 
@@ -52,12 +52,12 @@ async def notify_admins_about_new_order(db: AsyncSession, order_id: int) -> int:
         f"Цена: {price_label(order.price_from_snapshot, order.price_to_snapshot)}\n"
         f"Клиент: {user_label(order.user)}\n"
         f"Telegram ID: {order.user.telegram_id}\n"
-        f"Вложений: {len(order.attachments)}\n\n"
-        f"Комментарий:\n{order.customer_comment or 'Без комментария'}"
+        f"Файлов: {len(order.attachments)}\n\n"
+        f"Комментарий:\n{order.customer_comment or 'Комментария нет'}"
     )
     reply_markup = {
         "inline_keyboard": [
-            [{"text": "Открыть заказ", "web_app": {"url": mini_app_url(f"/admin/orders/{order.id}")}}]
+            [{"text": "Открыть заявку", "web_app": {"url": mini_app_url(f"/admin/orders/{order.id}")}}]
         ]
     }
 
@@ -88,7 +88,7 @@ async def notify_user_review_request(db: AsyncSession, order_id: int) -> bool:
     try:
         await telegram_bot.send_message(
             order.user.telegram_id,
-            f"Заказ #{order.id} завершён. Будем благодарны за короткий отзыв.",
+            f"Заявка #{order.id} готова. Если есть минутка, оставь короткий отзыв.",
             reply_markup=reply_markup,
         )
     except TelegramBotError:

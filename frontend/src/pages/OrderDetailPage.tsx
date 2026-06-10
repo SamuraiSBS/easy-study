@@ -27,7 +27,7 @@ export function OrderDetailPage() {
     return <LoadingState />;
   }
   if (error || !order) {
-    return <ErrorState message={error || 'Заказ не найден'} onRetry={reload} />;
+    return <ErrorState message={error || 'Не нашли эту заявку'} onRetry={reload} />;
   }
 
   const review = order.review;
@@ -43,12 +43,12 @@ export function OrderDetailPage() {
         whileTap={{ scale: 0.97 }}
         transition={springTransition}
       >
-        <ArrowLeft size={18} /> К заказам
+        <ArrowLeft size={18} /> К заявкам
       </MotionLink>
       <AnimatedSection className="app-card app-service-accent-card rounded-3xl border border-app-line bg-app-surface p-5 pl-6 shadow-soft">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-base text-app-muted">Заказ #{order.id}</div>
+            <div className="text-base text-app-muted">Заявка #{order.id}</div>
             <h1 className="mt-1 text-2xl font-bold leading-tight">{order.title_snapshot}</h1>
           </div>
           <StatusBadge status={order.status} />
@@ -58,18 +58,18 @@ export function OrderDetailPage() {
         </div>
         <dl className="mt-5 space-y-4 text-base leading-7">
           <div>
-            <dt className="font-bold">Комментарий</dt>
-            <dd className="mt-1 whitespace-pre-line text-app-muted">{order.customer_comment || 'Без комментария'}</dd>
+            <dt className="font-bold">Ваш комментарий</dt>
+            <dd className="mt-1 whitespace-pre-line text-app-muted">{order.customer_comment || 'Комментария нет'}</dd>
           </div>
           {order.admin_comment ? (
             <div>
-              <dt className="font-bold">Комментарий администратора</dt>
+              <dt className="font-bold">Комментарий по заявке</dt>
               <dd className="mt-1 whitespace-pre-line text-app-muted">{order.admin_comment}</dd>
             </div>
           ) : null}
           {order.attachments.length ? (
             <div>
-              <dt className="font-bold">Вложения</dt>
+              <dt className="font-bold">Файлы</dt>
               <dd className="mt-2">
                 <AttachmentList orderId={order.id} attachments={order.attachments} />
               </dd>
@@ -81,7 +81,7 @@ export function OrderDetailPage() {
             <div className="mt-6 rounded-2xl border border-app-line bg-app-bg p-4">
               <div className="flex items-center gap-2 text-base font-bold text-app-text">
                 <Star size={18} fill="currentColor" className="text-[var(--service-color)]" />
-                Отзыв оставлен: {review.rating}/5
+                Ваш отзыв: {review.rating}/5
               </div>
               <p className="mt-3 whitespace-pre-line text-base leading-7 text-app-muted">{review.text}</p>
             </div>

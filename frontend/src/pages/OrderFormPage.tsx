@@ -36,7 +36,7 @@ export function OrderFormPage() {
     }
     const nextAttachments = [...attachments, ...Array.from(files)];
     if (nextAttachments.length > MAX_ATTACHMENTS) {
-      setFileError(`Можно прикрепить не больше ${MAX_ATTACHMENTS} файлов`);
+      setFileError(`Можно добавить до ${MAX_ATTACHMENTS} файлов`);
       setAttachments(nextAttachments.slice(0, MAX_ATTACHMENTS));
       return;
     }
@@ -60,7 +60,7 @@ export function OrderFormPage() {
       await new Promise((resolve) => setTimeout(resolve, 720));
       navigate(`/orders/${order.id}`);
     } catch (errorValue) {
-      setSubmitError(errorValue instanceof Error ? errorValue.message : 'Не удалось создать заказ');
+      setSubmitError(errorValue instanceof Error ? errorValue.message : 'Не получилось отправить заявку');
     } finally {
       setSubmitting(false);
     }
@@ -70,11 +70,11 @@ export function OrderFormPage() {
     return <LoadingState />;
   }
   if (error || !service) {
-    return <ErrorState message={error || 'Услуга не найдена'} onRetry={reload} />;
+    return <ErrorState message={error || 'Не нашли эту услугу'} onRetry={reload} />;
   }
 
   if (submitted) {
-    return <SuccessBurst title="Заявка отправлена" />;
+    return <SuccessBurst title="Заявка ушла" />;
   }
 
   const serviceColor = getServiceColor(service.id, data?.services || []);
@@ -83,7 +83,7 @@ export function OrderFormPage() {
   return (
     <AnimatedList className="space-y-4" as="form" onSubmit={handleSubmit} style={serviceStyle}>
       <motion.section className="app-card app-service-accent-card rounded-3xl border border-app-line bg-app-surface p-5 pl-6 shadow-soft" variants={listItemVariants}>
-        <div className="text-base text-app-muted">Заявка на услугу</div>
+        <div className="text-base text-app-muted">Вы оформляете</div>
         <h1 className="mt-1 text-xl font-bold leading-tight">{service.title}</h1>
         <div className="mt-4">
           <Price variant="badge" color={serviceColor} priceFrom={service.price_from} priceTo={service.price_to} />
@@ -92,14 +92,14 @@ export function OrderFormPage() {
 
       <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <label className="block text-base font-bold" htmlFor="customer-comment">
-          Комментарий
+          Что нужно сделать
         </label>
         <textarea
           id="customer-comment"
           className="service-aware-control mt-3 min-h-40 w-full resize-y rounded-2xl border bg-white px-4 py-3 text-base leading-7 outline-none transition-colors"
           value={comment}
           onChange={(event) => setComment(event.target.value)}
-          placeholder="Тема, срок, требования, объем, пожелания"
+          placeholder="Тема, срок, требования преподавателя, объем и любые пожелания"
           maxLength={4000}
         />
         <div className="mt-2 text-right text-sm text-app-muted">{comment.length}/4000</div>
@@ -108,7 +108,7 @@ export function OrderFormPage() {
       <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
         <div className="flex items-center justify-between gap-3">
           <label className="block text-base font-bold" htmlFor="order-attachments">
-            Фото или файлы
+            Файлы к заданию
           </label>
           <span className="text-sm text-app-muted">{attachments.length}/{MAX_ATTACHMENTS}</span>
         </div>
@@ -116,7 +116,7 @@ export function OrderFormPage() {
           className="service-aware-dropzone mt-3 flex min-h-20 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-dashed bg-white px-4 py-3 text-base font-semibold text-app-muted transition-colors"
           htmlFor="order-attachments"
         >
-          <Paperclip size={18} /> Прикрепить
+          <Paperclip size={18} /> Добавить файл
         </label>
         <input
           id="order-attachments"
@@ -142,7 +142,7 @@ export function OrderFormPage() {
                   type="button"
                   className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-app-line text-app-muted"
                   onClick={() => removeAttachment(index)}
-                  title="Убрать файл"
+                  title="Удалить файл"
                 >
                   <X size={15} />
                 </AnimatedButton>
@@ -160,7 +160,7 @@ export function OrderFormPage() {
         className={`${serviceColor ? 'app-service-gradient' : 'app-accent-gradient'} app-cta-once inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText disabled:opacity-60`}
         disabled={submitting}
       >
-        <Send size={18} /> {submitting ? 'Отправка' : 'Подтвердить заявку'}
+        <Send size={18} /> {submitting ? 'Отправляем' : 'Отправить заявку'}
       </AnimatedButton>
     </AnimatedList>
   );

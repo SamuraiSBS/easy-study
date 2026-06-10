@@ -31,7 +31,7 @@ export function ReviewPage() {
       await new Promise((resolve) => setTimeout(resolve, 720));
       navigate('/orders');
     } catch (errorValue) {
-      const message = errorValue instanceof Error ? errorValue.message : 'Не удалось отправить отзыв';
+      const message = errorValue instanceof Error ? errorValue.message : 'Не получилось отправить отзыв';
       if (message === 'Review already exists') {
         setDuplicateReview(true);
         await reload();
@@ -47,32 +47,32 @@ export function ReviewPage() {
     return <LoadingState />;
   }
   if (error || !order) {
-    return <ErrorState message={error || 'Заказ не найден'} onRetry={reload} />;
+    return <ErrorState message={error || 'Не нашли эту заявку'} onRetry={reload} />;
   }
 
   if (submitted) {
-    return <SuccessBurst title="Отзыв отправлен" />;
+    return <SuccessBurst title="Спасибо за отзыв" />;
   }
 
   if (order.review || duplicateReview) {
     return (
       <AnimatedList className="space-y-4">
         <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
-          <div className="text-base text-app-muted">Отзыв к заказу #{order.id}</div>
+          <div className="text-base text-app-muted">Отзыв к заявке #{order.id}</div>
           <h1 className="mt-1 text-xl font-bold leading-tight">{order.title_snapshot}</h1>
           <div className="mt-5 rounded-2xl border border-app-line bg-app-bg p-4">
             {order.review ? (
               <>
                 <div className="flex items-center gap-2 text-base font-bold text-app-text">
                   <Star size={18} fill="currentColor" className="text-app-accent" />
-                  Отзыв оставлен: {order.review.rating}/5
+                  Ваш отзыв: {order.review.rating}/5
                 </div>
                 <p className="mt-3 whitespace-pre-line text-base leading-7 text-app-muted">{order.review.text}</p>
               </>
             ) : (
               <div className="flex items-center gap-2 text-base font-bold text-app-text">
                 <Star size={18} fill="currentColor" className="text-app-accent" />
-                Отзыв уже оставлен
+                Отзыв уже есть
               </div>
             )}
           </div>
@@ -84,7 +84,7 @@ export function ReviewPage() {
   return (
     <AnimatedList className="space-y-4" as="form" onSubmit={handleSubmit}>
       <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
-        <div className="text-base text-app-muted">Отзыв к заказу #{order.id}</div>
+        <div className="text-base text-app-muted">Отзыв к заявке #{order.id}</div>
         <h1 className="mt-1 text-xl font-bold leading-tight">{order.title_snapshot}</h1>
       </motion.section>
 
@@ -110,14 +110,14 @@ export function ReviewPage() {
           ))}
         </div>
         <label className="mt-5 block text-base font-bold" htmlFor="review-text">
-          Текст отзыва
+          Пару слов о работе
         </label>
         <textarea
           id="review-text"
           className="mt-3 min-h-36 w-full resize-y rounded-2xl border border-app-line bg-white px-4 py-3 text-base leading-7 outline-none transition-colors focus:border-app-accent"
           value={text}
           onChange={(event) => setText(event.target.value)}
-          placeholder="Что понравилось, как прошла работа"
+          placeholder="Что понравилось или что можно было сделать лучше"
           maxLength={3000}
           required
         />
@@ -130,7 +130,7 @@ export function ReviewPage() {
         className="app-accent-gradient app-cta-once inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-bold text-app-accentText disabled:opacity-60"
         disabled={submitting}
       >
-        <Star size={18} /> {submitting ? 'Отправка' : 'Отправить отзыв'}
+        <Star size={18} /> {submitting ? 'Отправляем' : 'Отправить отзыв'}
       </AnimatedButton>
     </AnimatedList>
   );

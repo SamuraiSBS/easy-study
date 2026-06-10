@@ -57,7 +57,7 @@ async def parse_order_create(request: Request) -> tuple[OrderCreate, list[Upload
             if len(attachments) > MAX_ORDER_ATTACHMENTS:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=f"Можно прикрепить не больше {MAX_ORDER_ATTACHMENTS} файлов",
+                    detail=f"Можно добавить до {MAX_ORDER_ATTACHMENTS} файлов",
                 )
             return payload, attachments
 

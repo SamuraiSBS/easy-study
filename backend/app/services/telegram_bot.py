@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 TELEGRAM_BOT_COMMANDS = [
     {"command": "start", "description": "Открыть приложение"},
-    {"command": "help", "description": "Как оформить заказ"},
-    {"command": "orders", "description": "Мои заказы"},
+    {"command": "help", "description": "Как оставить заявку"},
+    {"command": "orders", "description": "Мои заявки"},
 ]
 
 
@@ -113,4 +113,3 @@ class TelegramBotClient:
 
 
 telegram_bot = TelegramBotClient(settings.telegram_bot_token)
-

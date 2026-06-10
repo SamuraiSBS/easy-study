@@ -49,7 +49,7 @@ export function Layout({ user, children }: LayoutProps) {
     { path: '/', label: 'Услуги', icon: Home },
     { path: '/orders', label: 'Заявки', icon: ClipboardList },
     { path: '/profile', label: 'Профиль', icon: UserRound },
-    ...(user?.is_admin ? [{ path: '/admin', label: 'Админ', icon: Shield }] : [])
+    ...(user?.is_admin ? [{ path: '/admin', label: 'Управление', icon: Shield }] : [])
   ];
 
   return (

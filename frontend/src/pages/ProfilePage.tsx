@@ -25,7 +25,7 @@ export function ProfilePage({ user }: ProfilePageProps) {
         transition={springTransition}
       >
         <h1 className="text-3xl font-bold leading-tight">Профиль</h1>
-        <p className="mt-3 text-base leading-7 text-app-muted">Данные профиля появятся после авторизации через Telegram.</p>
+        <p className="mt-3 text-base leading-7 text-app-muted">Профиль появится после входа через Telegram.</p>
       </motion.section>
     );
   }
@@ -57,13 +57,13 @@ export function ProfilePage({ user }: ProfilePageProps) {
           )}
           <div className="min-w-0">
             <h1 className="truncate text-3xl font-bold leading-tight">{displayName}</h1>
-            <p className="mt-1 text-base text-app-muted">Профиль Telegram</p>
+            <p className="mt-1 text-base text-app-muted">Telegram</p>
           </div>
         </div>
       </motion.section>
 
       <motion.section className="app-card rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft" variants={listItemVariants}>
-        <h2 className="text-lg font-bold leading-tight text-app-text">Данные</h2>
+        <h2 className="text-lg font-bold leading-tight text-app-text">Информация</h2>
         <dl className="mt-4 space-y-4 text-base leading-7">
           <div className="grid gap-1 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:gap-3">
             <dt className="text-app-muted">Telegram ID</dt>
@@ -86,7 +86,7 @@ export function ProfilePage({ user }: ProfilePageProps) {
             <dd className="inline-flex items-center gap-1 font-bold sm:justify-end sm:text-right">
               {user.is_admin ? (
                 <>
-                  <Shield size={15} /> Администратор
+                  <Shield size={15} /> Админ
                 </>
               ) : (
                 'Клиент'

@@ -7,7 +7,7 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   contacted: 'Связались',
   in_progress: 'В работе',
   done: 'Готово',
-  cancelled: 'Отменен'
+  cancelled: 'Отменено'
 };
 
 const STATUS_CLASS: Record<OrderStatus, string> = {

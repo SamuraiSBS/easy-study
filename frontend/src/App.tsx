@@ -31,7 +31,7 @@ export function App() {
     try {
       setUser(await api.getMe());
     } catch (errorValue) {
-      setError(errorValue instanceof Error ? errorValue.message : 'Не удалось авторизоваться');
+      setError(errorValue instanceof Error ? errorValue.message : 'Не получилось войти через Telegram');
     } finally {
       setLoading(false);
     }

@@ -117,13 +117,13 @@ export function HomePage() {
   return (
     <div className="space-y-5">
       <AnimatedSection className="app-card app-card-strong rounded-3xl border border-app-line bg-app-surface p-5 shadow-soft">
-        <h1 className="text-3xl font-bold leading-tight">Выберите учебную работу</h1>
+        <h1 className="text-3xl font-bold leading-tight">Что нужно сделать?</h1>
         <p className="mt-3 max-w-2xl text-base leading-7 text-app-muted">
-          Оставьте заявку с комментарием, и администратор напишет вам в Telegram для деталей.
+          Выберите работу, напишите пару деталей, и мы свяжемся с вами в Telegram.
         </p>
       </AnimatedSection>
 
-      {services.length === 0 ? <EmptyState title="Услуги пока не добавлены" /> : null}
+      {services.length === 0 ? <EmptyState title="Пока нет доступных услуг" /> : null}
 
       {groupedWithColors.map(({ category, services: categoryServices }, categoryIndex) => (
         <AnimatedSection key={category} className="space-y-3" delay={categoryIndex * 0.04}>

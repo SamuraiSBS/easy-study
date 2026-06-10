@@ -25,7 +25,7 @@ const emptyServiceForm: ServicePayload = {
 
 function AdminTabs({ tab, setTab }: { tab: Tab; setTab: (tab: Tab) => void }) {
   const tabs: Array<{ id: Tab; label: string }> = [
-    { id: 'orders', label: 'Заказы' },
+    { id: 'orders', label: 'Заявки' },
     { id: 'services', label: 'Услуги' },
     { id: 'reviews', label: 'Отзывы' },
     { id: 'users', label: 'Пользователи' }
@@ -101,7 +101,7 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
             value={statusFilter}
             onChange={(event) => setStatusFilter(event.target.value as OrderStatus | 'all')}
           >
-            <option value="all">Все статусы</option>
+            <option value="all">Любой статус</option>
             {Object.entries(ORDER_STATUS_LABELS).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
@@ -109,7 +109,7 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
             ))}
           </select>
         </div>
-        {orders?.length === 0 ? <EmptyState title="Заказов нет" /> : null}
+        {orders?.length === 0 ? <EmptyState title="Заявок нет" /> : null}
         {orders?.map((order: AdminOrder) => (
           <motion.button
             key={order.id}
@@ -143,7 +143,7 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
         {selected ? (
           <div className="space-y-4">
             <div>
-              <div className="text-sm text-app-muted">Заказ #{selected.id}</div>
+              <div className="text-sm text-app-muted">Заявка #{selected.id}</div>
               <h2 className="mt-1 text-lg font-semibold">{selected.title_snapshot}</h2>
               <div className="mt-2 text-sm font-semibold text-app-accent">
                 <Price priceFrom={selected.price_from_snapshot} priceTo={selected.price_to_snapshot} />
@@ -152,16 +152,16 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
             <div className="text-sm">
               <div className="font-semibold">Клиент</div>
               <div className="mt-1 text-app-muted">
-                {selected.user.first_name || 'Без имени'} {selected.user.username ? `@${selected.user.username}` : ''}
+                {selected.user.first_name || 'Имя не указано'} {selected.user.username ? `@${selected.user.username}` : ''}
               </div>
             </div>
             <div className="text-sm">
-              <div className="font-semibold">Комментарий клиента</div>
-              <div className="mt-1 whitespace-pre-line text-app-muted">{selected.customer_comment || 'Без комментария'}</div>
+              <div className="font-semibold">Что написал клиент</div>
+              <div className="mt-1 whitespace-pre-line text-app-muted">{selected.customer_comment || 'Комментария нет'}</div>
             </div>
             {selected.attachments.length ? (
               <div className="text-sm">
-                <div className="font-semibold">Вложения</div>
+                <div className="font-semibold">Файлы</div>
                 <div className="mt-2">
                   <AttachmentList orderId={selected.id} attachments={selected.attachments} />
                 </div>
@@ -182,7 +182,7 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
               </select>
             </label>
             <label className="block text-sm font-semibold">
-              Комментарий администратора
+              Комментарий для клиента
               <textarea
                 className="mt-2 min-h-28 w-full resize-y rounded-2xl border border-app-line bg-white px-3 py-2"
                 value={adminComment}
@@ -198,7 +198,7 @@ function OrdersAdmin({ initialOrderId }: { initialOrderId?: number }) {
             </AnimatedButton>
           </div>
         ) : (
-          <EmptyState title="Выберите заказ" />
+          <EmptyState title="Выберите заявку" />
         )}
       </motion.aside>
     </div>
@@ -231,25 +231,25 @@ function ServiceForm({ service, onSaved }: { service?: Service; onSaved: () => P
       animate={{ opacity: 1, x: 0, scale: 1 }}
       transition={springTransition}
     >
-      <h2 className="font-semibold">{service ? 'Редактировать услугу' : 'Новая услуга'}</h2>
+      <h2 className="font-semibold">{service ? 'Изменить услугу' : 'Новая услуга'}</h2>
       <div className="mt-4 grid gap-3">
         <input
           className="rounded-2xl border border-app-line px-3 py-2 text-sm"
-          placeholder="Название"
+          placeholder="Название услуги"
           value={form.title}
           onChange={(event) => setForm({ ...form, title: event.target.value })}
           required
         />
         <textarea
           className="min-h-24 rounded-2xl border border-app-line px-3 py-2 text-sm"
-          placeholder="Описание"
+          placeholder="Короткое описание"
           value={form.description}
           onChange={(event) => setForm({ ...form, description: event.target.value })}
           required
         />
         <input
           className="rounded-2xl border border-app-line px-3 py-2 text-sm"
-          placeholder="Категория"
+          placeholder="Раздел"
           value={form.category}
           onChange={(event) => setForm({ ...form, category: event.target.value })}
           required
@@ -268,7 +268,7 @@ function ServiceForm({ service, onSaved }: { service?: Service; onSaved: () => P
             min={0}
             value={form.price_to ?? ''}
             onChange={(event) => setForm({ ...form, price_to: event.target.value ? Number(event.target.value) : null })}
-            placeholder="Цена до"
+            placeholder="Максимальная цена"
           />
         </div>
         <div className="flex items-center justify-between gap-3">
@@ -278,7 +278,7 @@ function ServiceForm({ service, onSaved }: { service?: Service; onSaved: () => P
               checked={form.is_active}
               onChange={(event) => setForm({ ...form, is_active: event.target.checked })}
             />
-            Активна
+            Показывать услугу
           </label>
           <input
             className="w-24 rounded-2xl border border-app-line px-3 py-2 text-sm"
@@ -288,7 +288,7 @@ function ServiceForm({ service, onSaved }: { service?: Service; onSaved: () => P
           />
         </div>
         <AnimatedButton className="app-accent-gradient inline-flex min-h-10 items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-app-accentText">
-          {service ? <Save size={17} /> : <Plus size={17} />} {service ? 'Сохранить услугу' : 'Добавить услугу'}
+          {service ? <Save size={17} /> : <Plus size={17} />} {service ? 'Сохранить' : 'Добавить'}
         </AnimatedButton>
       </div>
     </motion.form>
@@ -344,7 +344,7 @@ function ServicesAdmin() {
                 </div>
               </div>
               <span className={`rounded-full px-2.5 py-1 text-xs ${service.is_active ? 'app-soft-gradient text-app-accent' : 'bg-app-line text-app-muted'}`}>
-                {service.is_active ? 'активна' : 'скрыта'}
+                {service.is_active ? 'видна' : 'скрыта'}
               </span>
             </div>
             <div className="mt-4 flex gap-2">
@@ -379,7 +379,7 @@ function ReviewsAdmin() {
 
   return (
     <AnimatedList className="space-y-3">
-      {reviews?.length === 0 ? <EmptyState title="Отзывов пока нет" /> : null}
+      {reviews?.length === 0 ? <EmptyState title="Отзывов нет" /> : null}
       {reviews?.map((review) => (
         <motion.div
           key={review.id}
@@ -400,7 +400,7 @@ function ReviewsAdmin() {
               }`}
               onClick={() => void api.admin.updateReview(review.id, !review.is_published).then(reload)}
             >
-              <Check size={16} /> {review.is_published ? 'Опубликован' : 'Скрыт'}
+              <Check size={16} /> {review.is_published ? 'На сайте' : 'Скрыт'}
             </AnimatedButton>
           </div>
           <p className="mt-3 whitespace-pre-line text-sm leading-6 text-app-muted">{review.text}</p>
@@ -434,7 +434,7 @@ function UsersAdmin() {
             <div>
               <div className="font-semibold">{user.first_name || user.username || `ID ${user.telegram_id}`}</div>
               <div className="mt-1 text-sm text-app-muted">
-                {user.username ? `@${user.username}` : 'без username'} · {user.telegram_id}
+                {user.username ? `@${user.username}` : 'username не указан'} · {user.telegram_id}
               </div>
             </div>
             {user.is_admin ? <span className="rounded-full bg-app-line px-2.5 py-1 text-xs text-app-accent">admin</span> : null}
@@ -453,10 +453,10 @@ export function AdminPage() {
   return (
     <div className="space-y-4">
       <AnimatedSection className="flex items-center justify-between gap-3">
-        <h1 className="text-3xl font-bold leading-tight">Админка</h1>
+        <h1 className="text-3xl font-bold leading-tight">Управление</h1>
         {orderId ? (
           <Link className="rounded-full border border-app-line px-3 py-2 text-sm" to="/admin">
-            Все заказы
+            Все заявки
           </Link>
         ) : null}
       </AnimatedSection>

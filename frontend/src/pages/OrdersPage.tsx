@@ -33,10 +33,10 @@ export function OrdersPage() {
   return (
     <div className="space-y-4">
       <AnimatedSection>
-        <h1 className="text-3xl font-bold leading-tight">Мои заявки</h1>
+        <h1 className="text-3xl font-bold leading-tight">Ваши заявки</h1>
       </AnimatedSection>
 
-      {orders.length === 0 ? <EmptyState title="У вас пока нет заявок" /> : null}
+      {orders.length === 0 ? <EmptyState title="Заявок пока нет" /> : null}
 
       <AnimatedList className="space-y-3">
         {orders.map((order) => {
@@ -79,12 +79,12 @@ export function OrdersPage() {
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 rounded-full bg-app-line px-2.5 py-1 text-app-muted">
-                      <Star size={15} /> Отзыв не оставлен
+                      <Star size={15} /> Отзыва пока нет
                     </span>
                   )
                 ) : (
                   <span className="inline-flex items-center gap-1 text-app-muted">
-                    <MessageSquare size={15} /> Админ свяжется в Telegram
+                    <MessageSquare size={15} /> Напишем вам в Telegram
                   </span>
                 )}
                 <ArrowRight className="ml-auto text-app-muted transition group-hover:translate-x-1 group-hover:text-[var(--service-color)]" size={18} />

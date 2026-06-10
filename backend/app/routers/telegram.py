@@ -14,17 +14,17 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/telegram", tags=["telegram"])
 
 START_TEXT = (
-    "Привет! Здесь можно заказать учебную работу: презентацию, доклад, проект, курсовую, диплом или реферат."
+    "Привет! Поможем с учебной работой: презентацией, докладом, проектом, курсовой, дипломом или рефератом."
 )
 HELP_TEXT = (
-    "Открой Mini App, выбери услугу, укажи комментарий и отправь заявку. "
-    "Администратор увидит заказ и свяжется с тобой в Telegram."
+    "Открой Mini App, выбери нужную работу и напиши, что требуется. "
+    "После заявки мы свяжемся с тобой в Telegram."
 )
-ORDERS_TEXT = "Открой список своих заявок в Mini App."
+ORDERS_TEXT = "Открой свои заявки в Mini App."
 
 
 def app_keyboard(path: str = "") -> dict:
-    return {"inline_keyboard": [[{"text": "Открыть Mini App", "web_app": {"url": mini_app_url(path)}}]]}
+    return {"inline_keyboard": [[{"text": "Открыть приложение", "web_app": {"url": mini_app_url(path)}}]]}
 
 
 async def upsert_telegram_user(db: AsyncSession, telegram_user: dict) -> User | None:
