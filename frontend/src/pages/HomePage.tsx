@@ -60,7 +60,7 @@ function ServiceCard({ service, color }: { service: Service; color: string }) {
   return (
     <MotionLink
       to={`/services/${service.id}`}
-      className="app-card app-service-accent-card group flex h-full rounded-3xl border border-app-line bg-app-surface p-4 pl-5 shadow-soft transition-colors hover:border-[var(--service-color)]"
+      className="app-card app-service-accent-card group flex h-[216px] rounded-3xl border border-app-line bg-app-surface p-4 pl-5 shadow-soft transition-colors hover:border-[var(--service-color)] md:h-[196px]"
       style={colorStyle}
       variants={listItemVariants}
       whileHover={{ y: -3, scale: 1.01 }}
@@ -71,13 +71,13 @@ function ServiceCard({ service, color }: { service: Service; color: string }) {
         <div className="service-icon-surface flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-2xl border shadow-soft">
           <ServiceIcon size={38} strokeWidth={2.3} aria-hidden="true" />
         </div>
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex h-full min-w-0 flex-1 flex-col">
           <div className="flex items-start justify-between gap-3">
-            <h3 className="text-lg font-bold leading-snug">{service.title}</h3>
+            <h3 className="line-clamp-2 text-lg font-bold leading-snug">{service.title}</h3>
             <ArrowRight className="shrink-0 text-[var(--service-color)] transition group-hover:translate-x-1" size={18} />
           </div>
           <p className="mt-2 line-clamp-2 text-base leading-7 text-app-muted">{service.description}</p>
-          <div className="mt-4">
+          <div className="mt-auto pt-4">
             <Price
               variant="badge"
               className="service-price-badge w-full"
