@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
@@ -42,7 +42,24 @@ async def get_published_service_reviews(db: AsyncSession, service_ids: list[int]
     return reviews_by_service
 
 
-def serialize_service(service: Service, reviews: list[ServiceReviewRead]) -> ServiceWithReviewsRead:
+async def get_service_usage_counts(db: AsyncSession, service_ids: list[int]) -> dict[int, int]:
+    if not service_ids:
+        return {}
+
+    result = await db.execute(
+        select(Order.service_id, func.count(Order.id))
+        .where(Order.service_id.in_(service_ids), Order.status == "done")
+        .group_by(Order.service_id)
+    )
+
+    usage_counts: dict[int, int] = {service_id: 0 for service_id in service_ids}
+    for service_id, count in result.all():
+        if service_id is not None:
+            usage_counts[service_id] = count
+    return usage_counts
+
+
+def serialize_service(service: Service, reviews: list[ServiceReviewRead], usage_count: int = 0) -> ServiceWithReviewsRead:
     return ServiceWithReviewsRead.model_validate(
         {
             "id": service.id,
@@ -55,6 +72,7 @@ def serialize_service(service: Service, reviews: list[ServiceReviewRead]) -> Ser
             "order_num": service.order_num,
             "created_at": service.created_at,
             "updated_at": service.updated_at,
+            "usage_count": usage_count,
             "reviews": reviews,
         }
     )
@@ -68,8 +86,13 @@ async def list_services(db: AsyncSession = Depends(get_session)):
         .order_by(Service.order_num.asc(), Service.title.asc())
     )
     services = list(result.scalars().all())
-    reviews_by_service = await get_published_service_reviews(db, [service.id for service in services])
-    return [serialize_service(service, reviews_by_service.get(service.id, [])) for service in services]
+    service_ids = [service.id for service in services]
+    reviews_by_service = await get_published_service_reviews(db, service_ids)
+    usage_counts = await get_service_usage_counts(db, service_ids)
+    return [
+        serialize_service(service, reviews_by_service.get(service.id, []), usage_counts.get(service.id, 0))
+        for service in services
+    ]
 
 
 @router.get("/{service_id}", response_model=ServiceWithReviewsRead)
@@ -81,4 +104,5 @@ async def get_service(service_id: int, db: AsyncSession = Depends(get_session)):
     if service is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
     reviews_by_service = await get_published_service_reviews(db, [service.id])
-    return serialize_service(service, reviews_by_service.get(service.id, []))
+    usage_counts = await get_service_usage_counts(db, [service.id])
+    return serialize_service(service, reviews_by_service.get(service.id, []), usage_counts.get(service.id, 0))

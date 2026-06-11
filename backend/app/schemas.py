@@ -67,6 +67,7 @@ class ServiceReviewRead(BaseModel):
 
 
 class ServiceWithReviewsRead(ServiceRead):
+    usage_count: int = 0
     reviews: list[ServiceReviewRead] = []
 
 

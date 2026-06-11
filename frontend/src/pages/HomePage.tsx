@@ -2,11 +2,14 @@ import { motion } from 'framer-motion';
 import {
   ArrowRight,
   BookOpenText,
+  Clock,
   ClipboardList,
   FileStack,
   FileText,
   GraduationCap,
   Presentation,
+  Star,
+  User,
   type LucideIcon
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -53,6 +56,21 @@ function getServiceIcon(title: string): LucideIcon {
   return FileText;
 }
 
+function formatServiceRating(reviews: Service['reviews']) {
+  const serviceReviews = reviews || [];
+  const reviewCount = serviceReviews.length;
+
+  if (reviewCount === 0) {
+    return '0';
+  }
+
+  const averageRating = serviceReviews.reduce((sum, review) => sum + review.rating, 0) / reviewCount;
+  return new Intl.NumberFormat('ru-RU', {
+    maximumFractionDigits: 1,
+    minimumFractionDigits: Number.isInteger(averageRating) ? 0 : 1
+  }).format(averageRating);
+}
+
 function ServiceCard({ service, color }: { service: Service; color: string }) {
   const ServiceIcon = getServiceIcon(service.title);
   const colorStyle = getServiceAccentStyle(color);
@@ -60,7 +78,7 @@ function ServiceCard({ service, color }: { service: Service; color: string }) {
   return (
     <MotionLink
       to={`/services/${service.id}`}
-      className="app-card app-service-accent-card group flex h-[216px] rounded-3xl border border-app-line bg-app-surface p-4 pl-5 shadow-soft transition-colors hover:border-[var(--service-color)] md:h-[196px]"
+      className="app-card app-service-accent-card group flex h-fit self-start rounded-3xl border border-app-line bg-app-surface p-4 pl-5 shadow-soft transition-colors hover:border-[var(--service-color)]"
       style={colorStyle}
       variants={listItemVariants}
       whileHover={{ y: -3, scale: 1.01 }}
@@ -77,7 +95,21 @@ function ServiceCard({ service, color }: { service: Service; color: string }) {
             <ArrowRight className="shrink-0 text-[var(--service-color)] transition group-hover:translate-x-1" size={18} />
           </div>
           <p className="mt-2 line-clamp-2 text-base leading-7 text-app-muted">{service.description}</p>
-          <div className="mt-auto pt-4">
+          <div className="mt-2">
+            <div className="mb-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] font-bold leading-5 text-[var(--service-color)]">
+              <span className="inline-flex items-center gap-1.5">
+                <Clock size={15} strokeWidth={2.5} aria-hidden="true" />
+                3-7 дней
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <User size={15} strokeWidth={2.5} aria-hidden="true" />
+                {service.usage_count || 0} заказа
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Star size={15} strokeWidth={2.5} fill="currentColor" aria-hidden="true" />
+                {formatServiceRating(service.reviews)} ({service.reviews?.length || 0})
+              </span>
+            </div>
             <Price
               variant="badge"
               className="service-price-badge w-full"

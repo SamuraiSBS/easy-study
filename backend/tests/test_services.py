@@ -56,6 +56,7 @@ async def test_get_service_includes_only_published_reviews_for_that_service(clie
 
     assert response.status_code == 200
     reviews = response.json()["reviews"]
+    assert response.json()["usage_count"] == 2
     assert len(reviews) == 1
     assert reviews[0]["rating"] == 5
     assert reviews[0]["text"] == "Great essay"

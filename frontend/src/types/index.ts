@@ -18,6 +18,7 @@ export type Service = {
   category: string;
   is_active: boolean;
   order_num: number;
+  usage_count?: number;
   created_at: string;
   updated_at: string;
   reviews?: ServiceReview[];
@@ -80,4 +81,7 @@ export type AdminReview = Review & {
   user: User;
 };
 
-export type ServicePayload = Omit<Service, 'id' | 'created_at' | 'updated_at'>;
+export type ServicePayload = Pick<
+  Service,
+  'title' | 'description' | 'price_from' | 'price_to' | 'category' | 'is_active' | 'order_num'
+>;
